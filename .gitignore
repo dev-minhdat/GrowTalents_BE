@@ -1,0 +1,71 @@
+# ================================
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# ================================
+# Logs
+*.log
+logs/
+*.out
+
+# ================================
+# OS
+.DS_Store
+Thumbs.db
+
+# ================================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# ================================
+# Eclipse
+.project
+.classpath
+.settings/
+
+# ================================
+# VS Code
+.vscode/
+
+# ================================
+# Build
+/target/
+/build/
+/bin/
+
+# ================================
+# Maven
+.mvn/
+!**/src/main/**/mvnw*
+!**/src/main/**/mvnw.cmd
+
+# ================================
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# ================================
+# Environment & Config
+.env
+*.env
+application.yml
+application-*.yml
+application-*.properties
+!application.properties   
+
+# ================================
+# Database dumps / local db
+*.sql
+*.db
+
+# ================================
+# Others
+*.tmp
+*.swp
