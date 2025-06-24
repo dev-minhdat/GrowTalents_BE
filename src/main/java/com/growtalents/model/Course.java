@@ -1,5 +1,6 @@
 package com.growtalents.model;
 
+import com.growtalents.enums.CourseType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,9 +30,9 @@ public class Course {
     @Column (name = "description")
     private String description;
 
-
+    @Enumerated
     @Column (name = "type" )
-    private String type;
+    private CourseType type;
 
     @Lob
     @Column (name = "syllabus")

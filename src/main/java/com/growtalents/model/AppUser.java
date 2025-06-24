@@ -43,4 +43,15 @@ public class AppUser {
 
     @Column(name = "parent_phone", length = 10)
     private String userParentPhone;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.userStatus == null) {
+            this.userStatus = UserStatus.ACTIVE;
+        }
+        if (this.userRole == null) {
+            this.userRole = UserRole.STUDENT;
+        }
+    }
+
 }

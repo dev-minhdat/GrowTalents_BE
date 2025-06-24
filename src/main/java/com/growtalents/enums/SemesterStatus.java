@@ -1,13 +1,13 @@
 package com.growtalents.enums;
 
-public enum StudentCourseStatus {
-    ENROLLED("Đang học"),
-    DROPPED("Đã rút"),
-    COMPLETED("Hoàn thành");
+public enum SemesterStatus {
+    ONGOING("Đang diễn ra"),
+    UPCOMING("Sắp tới"),
+    FINISHED("Đã kết thúc");
 
     private final String displayName;
 
-    StudentCourseStatus(String displayName) {
+    SemesterStatus(String displayName) {
         this.displayName = displayName;
     }
 
