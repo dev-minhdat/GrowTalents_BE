@@ -18,4 +18,5 @@ public class AppUserResponseDTO {
     private UserStatus userStatus;
     private String userParentName;
     private String userParentPhone;
+    private String description;
 }

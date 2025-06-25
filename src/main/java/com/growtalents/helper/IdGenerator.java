@@ -86,4 +86,19 @@ public class IdGenerator {
     public static String generateUUID() {
         return UUID.randomUUID().toString(); // uuid dạng 8a2f7b62-xxxx-xxxx-xxxx
     }
+
+    // === MONTHLY SALARY ===
+    public static String generateMonthlySalaryId(String teacherId, String month) {
+        return "SAL_" + teacherId + "_" + month; // SAL_USR_001_2025-06
+    }
+
+    // === SESSION-LESSON RELATION ===
+    public static String generateSessionLessonId(String sessionId, String lessonId) {
+        return "SLES_" + sessionId + "_" + lessonId; // SLES_SES_001_LES_002
+    }
+
+    // === USER-COURSE ROLE ===
+    public static String generateUserCourseId(String userId, String courseId) {
+        return "UC_" + userId + "_" + courseId; // UC_USR_001_MATH_001
+    }
 }

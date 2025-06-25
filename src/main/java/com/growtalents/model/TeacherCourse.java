@@ -20,6 +20,9 @@ public class TeacherCourse {
     @Column (name = "assigned_role")
     private AssignedRole assignedRole;
 
+    @Column (name = "hourly_rate")
+    private int  hourlyRate;
+
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name =  "teacher_id", nullable = false)
     private AppUser teacher;

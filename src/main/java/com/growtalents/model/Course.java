@@ -1,5 +1,6 @@
 package com.growtalents.model;
 
+import com.growtalents.enums.CourseStatus;
 import com.growtalents.enums.CourseType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,4 +38,7 @@ public class Course {
     @Lob
     @Column (name = "syllabus")
     private String syllabus;
+
+    @Column (name = "status")
+    private CourseStatus status;
 }

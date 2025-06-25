@@ -30,6 +30,7 @@ public class AppUserCreateRequestDTO {
     @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại không hợp lệ")
     private String userPhone;
 
+    private String description;
 
 //    private String userParentName;
 //

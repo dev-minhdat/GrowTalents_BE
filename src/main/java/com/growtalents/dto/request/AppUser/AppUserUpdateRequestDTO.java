@@ -33,4 +33,6 @@ public class AppUserUpdateRequestDTO {
 
     @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại phụ huynh không hợp lệ")
     private String userParentPhone;
+
+    private String description;
 }
