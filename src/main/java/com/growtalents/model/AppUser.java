@@ -44,6 +44,10 @@ public class AppUser {
     @Column(name = "parent_phone", length = 10)
     private String userParentPhone;
 
+    @Lob
+    @Column(name = "description" )
+    private String description;
+
     @PrePersist
     public void prePersist() {
         if (this.userStatus == null) {

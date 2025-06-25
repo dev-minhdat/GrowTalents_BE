@@ -27,7 +27,8 @@ public class TeachingLog {
     private ClassSession session;
 
     @Column(name = "teaching_hours")
-    private Integer teachingHours;
+    private double teachingHours;
+
 
     @Column(name = "salary_amount")
     private Integer salaryAmount;

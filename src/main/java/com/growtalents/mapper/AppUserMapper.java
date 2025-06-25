@@ -14,6 +14,7 @@ public class AppUserMapper {
                 .userEmail(dto.getUserEmail())
                 .userPassword(dto.getUserPassword())
                 .userPhone(dto.getUserPhone())
+                .description(dto.getDescription())
                 .build();
     }
 
@@ -26,6 +27,7 @@ public class AppUserMapper {
         user.setUserStatus(dto.getUserStatus());
         user.setUserParentName(dto.getUserParentName());
         user.setUserParentPhone(dto.getUserParentPhone());
+        user.setDescription(dto.getDescription());
     }
 
     public static AppUserResponseDTO toResponseDTO(AppUser user) {
@@ -38,6 +40,7 @@ public class AppUserMapper {
                 .userStatus(user.getUserStatus())
                 .userParentName(user.getUserParentName())
                 .userParentPhone(user.getUserParentPhone())
+                .description(user.getDescription())
                 .build();
     }
 }

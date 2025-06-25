@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -26,6 +27,12 @@ public class ClassSession {
 
     @Column(name = "duration_in_minutes")
     private int durationInMinutes;
+
+    @Column (name= "start_datetime")
+    private LocalDateTime startDateTime;
+
+    @Column (name = "end_datetime")
+    private LocalDateTime endDateTime;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name = "course_id",nullable = false)
