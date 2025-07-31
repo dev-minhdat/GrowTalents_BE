@@ -4,7 +4,9 @@ import com.growtalents.dto.request.MonthlySalary.MonthlySalaryCreateRequestDTO;
 import com.growtalents.dto.response.MonthlySalary.MonthlySalaryResponseDTO;
 import com.growtalents.model.AppUser;
 import com.growtalents.model.MonthlySalary;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MonthlySalaryMapper {
     public static MonthlySalary toEntity(MonthlySalaryCreateRequestDTO dto, String generatedId, AppUser teacher) {
         MonthlySalary salary = new MonthlySalary();

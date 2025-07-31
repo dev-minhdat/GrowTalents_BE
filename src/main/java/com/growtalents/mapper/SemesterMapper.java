@@ -3,7 +3,9 @@ package com.growtalents.mapper;
 import com.growtalents.dto.request.Semester.SemesterCreateRequestDTO;
 import com.growtalents.dto.response.Semester.SemesterResponseDTO;
 import com.growtalents.model.Semester;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SemesterMapper {
     public static Semester toEntity(SemesterCreateRequestDTO dto, String generatedId) {
         Semester semester = new Semester();

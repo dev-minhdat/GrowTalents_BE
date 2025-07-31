@@ -5,7 +5,9 @@ import com.growtalents.dto.response.StudentSubmission.StudentSubmissionResponseD
 import com.growtalents.model.AppUser;
 import com.growtalents.model.Assignment;
 import com.growtalents.model.StudentSubmission;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StudentSubmissionMapper {
     public static StudentSubmission toEntity(StudentSubmissionCreateRequestDTO dto, String generatedId, Assignment assignment, AppUser student) {
         StudentSubmission ss = new StudentSubmission();

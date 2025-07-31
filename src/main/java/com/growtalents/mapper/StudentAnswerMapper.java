@@ -5,7 +5,9 @@ import com.growtalents.dto.response.StudentAnswer.StudentAnswerResponseDTO;
 import com.growtalents.model.AppUser;
 import com.growtalents.model.MultipleChoiceQuestion;
 import com.growtalents.model.StudentAnswer;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StudentAnswerMapper {
     public static StudentAnswer toEntity(StudentAnswerCreateRequestDTO dto, String generatedId, AppUser student, MultipleChoiceQuestion question) {
         StudentAnswer sa = new StudentAnswer();

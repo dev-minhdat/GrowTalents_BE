@@ -5,7 +5,9 @@ import com.growtalents.dto.response.TeacherCourse.TeacherCourseResponseDTO;
 import com.growtalents.model.AppUser;
 import com.growtalents.model.Course;
 import com.growtalents.model.TeacherCourse;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TeacherCourseMapper {
     public static TeacherCourse toEntity(TeacherCourseCreateRequestDTO dto, int generatedId, AppUser teacher, Course course) {
         TeacherCourse tc = new TeacherCourse();

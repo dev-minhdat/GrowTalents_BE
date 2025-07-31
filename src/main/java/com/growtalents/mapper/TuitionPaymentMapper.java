@@ -5,7 +5,9 @@ import com.growtalents.dto.response.TuitionPayment.TuitionPaymentResponseDTO;
 import com.growtalents.model.AppUser;
 import com.growtalents.model.Course;
 import com.growtalents.model.TuitionPayment;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TuitionPaymentMapper {
     public static TuitionPayment toEntity(TuitionPaymentCreateRequestDTO dto, String generatedId, AppUser student, Course course) {
         TuitionPayment tp = new TuitionPayment();

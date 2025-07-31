@@ -27,7 +27,7 @@ public class StudentSubmission {
     @JoinColumn(name = "student_id", nullable = false)
     private AppUser student;
 
-    @Column(name = "file_url")
+    @Column(name = "file_url",length = 1024)
     private String fileUrl;
 
     @Column(name = "submitted_at")

@@ -5,7 +5,9 @@ import com.growtalents.dto.response.TeachingLog.TeachingLogResponseDTO;
 import com.growtalents.model.AppUser;
 import com.growtalents.model.ClassSession;
 import com.growtalents.model.TeachingLog;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TeachingLogMapper {
     public static TeachingLog toEntity(TeachingLogCreateRequestDTO dto, String generatedId, AppUser teacher, ClassSession session) {
         TeachingLog log = new TeachingLog();
