@@ -32,8 +32,4 @@ public class AppUserCreateRequestDTO {
 
     private String description;
 
-//    private String userParentName;
-//
-//    @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại phụ huynh không hợp lệ")
-//    private String userParentPhone;
 }

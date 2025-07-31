@@ -5,7 +5,9 @@ import com.growtalents.dto.response.SemesterCourse.SemesterCourseResponseDTO;
 import com.growtalents.model.Course;
 import com.growtalents.model.Semester;
 import com.growtalents.model.SemesterCourse;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SemesterCourseMapper {
     public static SemesterCourse toEntity(SemesterCourseCreateRequestDTO dto, String generatedId, Semester semester, Course course) {
         SemesterCourse sc = new SemesterCourse();

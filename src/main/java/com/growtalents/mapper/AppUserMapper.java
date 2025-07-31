@@ -4,7 +4,9 @@ import com.growtalents.dto.request.AppUser.AppUserCreateRequestDTO;
 import com.growtalents.dto.request.AppUser.AppUserUpdateRequestDTO;
 import com.growtalents.dto.response.AppUser.AppUserResponseDTO;
 import com.growtalents.model.AppUser;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AppUserMapper {
 
     public static AppUser toEntity(AppUserCreateRequestDTO dto, String generatedId) {

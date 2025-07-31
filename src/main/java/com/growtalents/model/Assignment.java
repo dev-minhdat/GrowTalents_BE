@@ -24,7 +24,7 @@ public class Assignment {
     @Column(name="description",nullable = false)
     private String description;
 
-    @Column (name="upload_file_url")
+    @Column (name="upload_file_url" , length = 1024)
     private String uploadFileUrl;
 
     @Column(name = "assignment_type")

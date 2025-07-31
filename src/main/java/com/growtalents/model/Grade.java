@@ -34,7 +34,7 @@ public class Grade {
     private ClassSession classSession;
 
     @Column(name = "score")
-    private Integer score;
+    private Float score;
 
     @Lob
     @Column(name = "comment")

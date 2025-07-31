@@ -29,7 +29,7 @@ public class Material {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "file_url")
+    @Column(name = "file_url", length = 1024)
     private String fileUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

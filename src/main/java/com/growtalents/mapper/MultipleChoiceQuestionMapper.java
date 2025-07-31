@@ -4,7 +4,9 @@ import com.growtalents.dto.request.MultipleChoiceQuestion.MultipleChoiceQuestion
 import com.growtalents.dto.response.MultipleChoiceQuestion.MultipleChoiceQuestionResponseDTO;
 import com.growtalents.model.Assignment;
 import com.growtalents.model.MultipleChoiceQuestion;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MultipleChoiceQuestionMapper {
     public static MultipleChoiceQuestion toEntity(MultipleChoiceQuestionCreateRequestDTO dto, String generatedId, Assignment assignment) {
         return MultipleChoiceQuestion.builder()

@@ -5,7 +5,9 @@ import com.growtalents.dto.response.SessionLesson.SessionLessonResponseDTO;
 import com.growtalents.model.ClassSession;
 import com.growtalents.model.Lesson;
 import com.growtalents.model.SessionLesson;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SessionLessonMapper {
     public static SessionLesson toEntity(SessionLessonCreateRequestDTO dto, String generatedId, ClassSession session, Lesson lesson) {
         SessionLesson sl = new SessionLesson();

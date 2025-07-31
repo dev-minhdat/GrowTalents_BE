@@ -5,7 +5,9 @@ import com.growtalents.dto.response.UserCourse.UserCourseResponseDTO;
 import com.growtalents.model.AppUser;
 import com.growtalents.model.Course;
 import com.growtalents.model.UserCourse;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserCourseMapper {
     public static UserCourse toEntity(UserCourseCreateRequestDTO dto, String generatedId, AppUser user, Course course) {
         UserCourse uc = new UserCourse();
