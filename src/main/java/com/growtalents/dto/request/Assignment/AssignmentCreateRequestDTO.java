@@ -14,5 +14,5 @@ public class AssignmentCreateRequestDTO {
     private String description;
     private String uploadFileUrl;
     private AssignmentType assignmentType;
-    private String courseId;
+    private String lessonId;
 }

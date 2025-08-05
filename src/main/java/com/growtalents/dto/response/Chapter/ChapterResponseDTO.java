@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class ChapterResponseDTO {
     private String chapterId;
-    private Syllabus syllabus;
+    private String syllabusId;
     private String title;
     private String description;
 }

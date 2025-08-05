@@ -12,33 +12,37 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Xử lý lỗi validate DTO (NotBlank, Email,...)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<GlobalResponse<Void>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
         );
-
         return ResponseEntity.badRequest().body(
                 GlobalResponse.error("Validation Failed", 400, errors)
         );
     }
 
-    // Xử lý các lỗi Runtime như không tìm thấy bản ghi
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<GlobalResponse<Void>> handleRuntimeException(RuntimeException ex) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<GlobalResponse<Void>> handleNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                GlobalResponse.error(ex.getMessage(), 404)
+        );
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<GlobalResponse<Void>> handleBadRequest(BadRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 GlobalResponse.error(ex.getMessage(), 400)
         );
     }
 
-    // Bắt fallback cho các lỗi khác
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GlobalResponse<Void>> handleAllOtherExceptions(Exception ex) {
+        ex.printStackTrace(); // debug log nếu cần
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 GlobalResponse.error("Unexpected error: " + ex.getMessage(), 500)
         );
     }
 }
+

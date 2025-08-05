@@ -12,5 +12,5 @@ public class LessonResponseDTO {
     private String lessonId;
     private String title;
     private String content;
-    private Chapter chapter;
+//    private Chapter chapter;
 }

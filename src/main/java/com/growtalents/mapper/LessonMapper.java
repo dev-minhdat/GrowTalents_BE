@@ -6,6 +6,9 @@ import com.growtalents.model.Chapter;
 import com.growtalents.model.Lesson;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class LessonMapper {
     public Lesson toEntity(LessonCreateRequestDTO dto, String generateId, Chapter chapter) {
@@ -21,7 +24,12 @@ public class LessonMapper {
                 .lessonId(lesson.getLessonId())
                 .title(lesson.getTitle())
                 .content(lesson.getContent())
-                .chapter(lesson.getChapter())
+//                .chapter(lesson.getChapter())
                 .build();
+    }
+    public List<LessonResponseDTO> toResponseDTO(List<Lesson> lessons) {
+        return lessons.stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -38,5 +39,5 @@ public class Document {
     private String fileUrl;
 
     @Column(name = "uploaded_at")
-    private LocalDateTime uploadedAt;
+    private LocalDate uploadedAt;
 }

@@ -2,8 +2,8 @@ package com.growtalents.enums;
 
 public enum DocumentType {
     LECTURE("Bài giảng"),
-    REFERENCE("Tài liệu tham khảo"),
-    OTHER("Khác");
+    REFERENCE("Tài liệu tham khảo");
+
 
     private final String displayName;
 

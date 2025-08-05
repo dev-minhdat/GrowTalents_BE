@@ -2,6 +2,7 @@ package com.growtalents.dto.request.Document;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -14,5 +15,5 @@ public class DocumentCreateRequestDTO {
     private String title;
     private String description;
     private String fileUrl;
-    private LocalDateTime uploadedAt;
+    private LocalDate uploadedAt;
 }
