@@ -20,9 +20,9 @@ public class Syllabus {
     @JoinColumn(name = "course_id", nullable = false, unique = true)
     private Course course;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // don't need
     private String title;
 
     @Lob
-    private String description;
+    private String description; // don't need
 }

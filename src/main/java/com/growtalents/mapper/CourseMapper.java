@@ -15,7 +15,6 @@ public class CourseMapper {
                 .duration(dto.getDuration())
                 .name(dto.getNameCourse())
                 .status(dto.getStatus())
-                .syllabus(dto.getSyllabus())
                 .tuitionFee(dto.getTuitionFee())
                 .build();
     }
@@ -27,7 +26,6 @@ public class CourseMapper {
                 .type(entity.getType())
                 .duration(entity.getDuration())
                 .status(entity.getStatus())
-                .syllabus(entity.getSyllabus())
                 .tuitionFee(entity.getTuitionFee())
                 .build();
     }
