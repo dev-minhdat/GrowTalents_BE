@@ -36,7 +36,7 @@ public class Assignment {
     private AssignmentType assignmentType;
 
     @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn (name = "course_id",nullable = false)
-    private Course course;
+    @JoinColumn (name = "lesson_id",nullable = false)
+    private Lesson lesson;
 
 }

@@ -11,8 +11,8 @@ import lombok.*;
 @Builder
 public class AssignmentResponseDTO {
     private String assignmentId;
-    private String courseId;
-    private String courseName;
+    private String lessonId;
+    private String lessonTitle;
     private String title;
     private String description;
     private String uploadFileUrl;
