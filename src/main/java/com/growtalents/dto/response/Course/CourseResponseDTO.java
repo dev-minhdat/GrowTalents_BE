@@ -16,6 +16,6 @@ public class CourseResponseDTO {
     private String duration;
     private String description;
     private CourseType type;
-    private String syllabus;
+//    private String syllabus;
     private CourseStatus status;
 }

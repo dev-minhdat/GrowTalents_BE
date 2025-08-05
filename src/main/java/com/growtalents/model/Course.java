@@ -35,9 +35,9 @@ public class Course {
     @Column (name = "type" )
     private CourseType type;
 
-    @Lob
-    @Column (name = "syllabus")
-    private String syllabus;
+//    @Lob
+//    @Column (name = "syllabus")
+//    private String syllabus;
 
     @Column (name = "status")
     private CourseStatus status;

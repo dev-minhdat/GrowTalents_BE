@@ -11,23 +11,20 @@ import com.growtalents.repository.AppUserRepository;
 import com.growtalents.service.Interfaces.AppUserService;
 import com.growtalents.service.id.IdSequenceService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class AppUserImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
     private final IdSequenceService idSequenceService;
 
-    @Autowired
-    public AppUserImpl(AppUserRepository appUserRepository,
-                       IdSequenceService idSequenceService) {
-        this.appUserRepository = appUserRepository;
-        this.idSequenceService = idSequenceService;
-    }
+
     @Override
     public AppUserResponseDTO getAppUserById(String id) {
         AppUser user = appUserRepository.findById(id)

@@ -4,6 +4,8 @@ import com.growtalents.enums.AssignmentType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -26,6 +28,9 @@ public class Assignment {
 
     @Column (name="upload_file_url" , length = 1024)
     private String uploadFileUrl;
+
+    @Column(name="deadline")
+    private LocalDate deadline;
 
     @Column(name = "assignment_type")
     private AssignmentType assignmentType;

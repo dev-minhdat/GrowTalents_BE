@@ -1,8 +1,11 @@
 package com.growtalents.model;
 
 
+import com.growtalents.enums.DocumentType;
 import jakarta.persistence.*;
 import lombok.*;
+
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,8 +25,11 @@ public class Document {
     @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
+
+    @Column(name = "type")
+    private DocumentType type;
 
     @Lob
     private String description;

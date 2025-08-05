@@ -1,6 +1,6 @@
 package com.growtalents.exception;
 
-import com.growtalents.dto.response.common.GlobalResponse;
+import com.growtalents.dto.response.GlobalResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,28 +21,24 @@ public class GlobalExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage())
         );
 
-        return ResponseEntity.badRequest().body(GlobalResponse.<Void>builder()
-                .success(false)
-                .message("Validation Failed")
-                .errors(errors)
-                .build());
+        return ResponseEntity.badRequest().body(
+                GlobalResponse.error("Validation Failed", 400, errors)
+        );
     }
 
     // Xử lý các lỗi Runtime như không tìm thấy bản ghi
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<GlobalResponse<Void>> handleRuntimeException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(GlobalResponse.<Void>builder()
-                .success(false)
-                .message(ex.getMessage())
-                .build());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                GlobalResponse.error(ex.getMessage(), 400)
+        );
     }
 
     // Bắt fallback cho các lỗi khác
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GlobalResponse<Void>> handleAllOtherExceptions(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GlobalResponse.<Void>builder()
-                .success(false)
-                .message("Unexpected error: " + ex.getMessage())
-                .build());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                GlobalResponse.error("Unexpected error: " + ex.getMessage(), 500)
+        );
     }
 }
