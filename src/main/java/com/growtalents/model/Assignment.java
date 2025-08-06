@@ -39,4 +39,11 @@ public class Assignment {
     @JoinColumn (name = "lesson_id",nullable = false)
     private Lesson lesson;
 
+    @Column(name = "created_at")
+    private LocalDate createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) createdAt = LocalDate.now();
+    }
 }
