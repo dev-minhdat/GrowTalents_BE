@@ -9,9 +9,9 @@ import lombok.*;
 @Builder
 public class GradeCreateRequestDTO {
     private String studentId;
-    private String courseId;
+//    private String courseId;
     private String assignmentId;
-    private String classSessionId;
+//    private String classSessionId;
     private Float score;
     private String comment;
 }

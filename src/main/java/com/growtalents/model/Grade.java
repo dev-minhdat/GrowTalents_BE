@@ -21,17 +21,17 @@ public class Grade {
     @JoinColumn(name = "student_id", nullable = false)
     private AppUser student;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "course_id", nullable = false)
+//    private Course course;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignment_id")
     private Assignment assignment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_session_id")
-    private ClassSession classSession;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "class_session_id")
+//    private ClassSession classSession;
 
     @Column(name = "score")
     private Float score;

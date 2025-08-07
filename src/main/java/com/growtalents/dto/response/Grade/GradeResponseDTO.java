@@ -9,12 +9,12 @@ import lombok.*;
 @Builder
 public class GradeResponseDTO {
     private String gradeId;
-    private String courseId;
+//    private String courseId;
     private String assignmentId;
-    private String classSessionId;
-    private String courseName; // field name in Course
+//    private String classSessionId;
+//    private String courseName;
     private String assignmentName; // field title in Assignment
-    private String classSessionName; // field topic in ClassSession
+//    private String classSessionName;
     private Float score;
     private String comment;
 }
