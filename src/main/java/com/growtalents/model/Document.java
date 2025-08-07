@@ -29,6 +29,7 @@ public class Document {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private DocumentType type;
 
