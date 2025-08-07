@@ -17,6 +17,7 @@ public class TeacherCourse {
     @Column (name = "teachercourse_id")
     private int teacherCourseId;
 
+    @Enumerated(EnumType.STRING)
     @Column (name = "assigned_role")
     private AssignedRole assignedRole;
 

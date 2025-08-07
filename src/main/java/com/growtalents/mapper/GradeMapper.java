@@ -18,9 +18,10 @@ public class GradeMapper {
         return GradeResponseDTO.builder()
                 .gradeId(grade.getGradeId())
                 .assignmentId(grade.getAssignment().getAssignmentId())
-                .assignmentName(grade.getAssignment().getTitle())   
+                .assignmentName(grade.getAssignment().getTitle())
                 .score(grade.getScore())
                 .comment(grade.getComment())
+                .performanceLevel(grade.getPerformanceLevel())
                 .build();
     }
 }

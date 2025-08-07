@@ -1,5 +1,6 @@
 package com.growtalents.dto.response.Grade;
 
+import com.growtalents.enums.PerformanceLevel;
 import lombok.*;
 
 @AllArgsConstructor
@@ -17,4 +18,5 @@ public class GradeResponseDTO {
 //    private String classSessionName;
     private Float score;
     private String comment;
+    private PerformanceLevel performanceLevel;
 }

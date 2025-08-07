@@ -17,6 +17,7 @@ public class Attendance {
     @Column (name = "attendance_id")
     private String attendanceId;
 
+    @Enumerated(EnumType.STRING)
     @Column (name = "status")
     private AttendanceStatus status;
 
