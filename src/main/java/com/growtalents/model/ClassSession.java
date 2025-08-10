@@ -5,6 +5,7 @@
     import lombok.*;
 
     import java.time.LocalDate;
+    import java.time.LocalDateTime;
     import java.time.LocalTime;
 
     @Getter
@@ -45,6 +46,9 @@
 
         @Column(name = "proposed_start_time")
         private LocalTime proposedStartTime;
+
+        @Column(name = "reschedule_submitted_at")
+        private LocalDateTime rescheduleSubmittedAt;
         // ==== Kết thúc nhóm field đề xuất đổi lịch ====
 
         // Ngày thực tế diễn ra buổi học (có thể thay đổi nếu đề xuất được duyệt)

@@ -6,6 +6,9 @@ import com.growtalents.model.ClassSession;
 import com.growtalents.model.Course;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class ClassSessionMapper {
     public ClassSession toEntity(ClassSessionCreateRequestDTO dto, String generateId, Course course) {
@@ -30,4 +33,10 @@ public class ClassSessionMapper {
                 .course(dto.getCourse())
                 .build();
     }
+    public List<ClassSessionResponseDTO> toResponseDTO(List<ClassSession> dtoList) {
+        return dtoList.stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }
