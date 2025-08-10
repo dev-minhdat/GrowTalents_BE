@@ -19,7 +19,7 @@ public class AssignmentController {
 
     private final AssignmentService assignmentService;
 
-    @GetMapping
+    @GetMapping("/by-lesson")
     @Operation(summary = "Lấy danh sách bài tập theo LessonId0")
     public ResponseEntity<GlobalResponse<List<AssignmentResponseDTO>>> getAllAssignmentsByLessonId(
             @RequestParam("lessonId") String lessonId) {
@@ -32,5 +32,11 @@ public class AssignmentController {
             @Valid @RequestBody AssignmentCreateRequestDTO dto) {
         assignmentService.createAssignment(dto);
         return ResponseEntity.ok(GlobalResponse.success("Tạo bài tập thành công", null));
+    }
+    @GetMapping("/by-teacher")
+    @Operation(summary = "Lấy danh sách bài tập mà teacher đã tạo")
+    public ResponseEntity<GlobalResponse<List<AssignmentResponseDTO>>> getAllAssignmentsByTeacherId(@RequestParam String teacherId ) {
+        List<AssignmentResponseDTO> assignments = assignmentService.getAllAssignmentByTeacherId(teacherId);
+        return ResponseEntity.ok(GlobalResponse.success(assignments));
     }
 }

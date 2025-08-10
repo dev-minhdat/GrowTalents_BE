@@ -41,4 +41,10 @@ public class AssignmentServiceImpl implements AssignmentService {
         Assignment assignment= assignmentMapper.toEntity(dto,assignmentId,lesson);
         assignmentRepository.save(assignment);
     }
+
+    @Override
+    public List<AssignmentResponseDTO> getAllAssignmentByTeacherId(String teacherId) {
+        List<Assignment> assignments = assignmentRepository.findByTeacherIdOrderByCreatedAtDesc(teacherId);
+        return assignmentMapper.toResponseDTO(assignments);
+    }
 }
