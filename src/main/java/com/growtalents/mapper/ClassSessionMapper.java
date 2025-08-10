@@ -14,8 +14,8 @@ public class ClassSessionMapper {
                 .topic(dto.getTopic())
                 .sessionDate(dto.getSessionDate())
                 .durationInMinutes(dto.getDurationInMinutes())
-                .startDateTime(dto.getStartDateTime())
-                .endDateTime(dto.getEndDateTime())
+                .startTime(dto.getStartTime())
+                .endTime(dto.getEndTime())
                 .course(course)
                 .build();
     }
@@ -25,8 +25,8 @@ public class ClassSessionMapper {
                 .topic(dto.getTopic())
                 .sessionDate(dto.getSessionDate())
                 .durationInMinutes(dto.getDurationInMinutes())
-                .startDateTime(dto.getStartDateTime())
-                .endDateTime(dto.getEndDateTime())
+                .startTime(dto.getStartTime())
+                .endTime(dto.getEndTime())
                 .course(dto.getCourse())
                 .build();
     }
