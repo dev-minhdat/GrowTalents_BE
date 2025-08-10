@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Repository
 public interface ClassSessionRepository extends JpaRepository<ClassSession, String> {
@@ -29,4 +30,17 @@ public interface ClassSessionRepository extends JpaRepository<ClassSession, Stri
                                @Param("proposedStart") LocalTime proposedStart,
                                @Param("proposedEnd") LocalTime proposedEnd,
                                @Param("excludeSessionId") String excludeSessionId);
+
+    // Lấy danh sách các session có đề xuất dời lịch của giáo viên (không đụng entity)
+    @Query("""
+    select cs
+    from ClassSession cs
+    join cs.course c
+    join TeacherCourse tc on tc.course = c
+    where tc.teacher.userId = :teacherId
+      and cs.rescheduleStatus is not null
+    order by cs.rescheduleSubmittedAt desc
+""")
+    List<ClassSession> findReschedulesByTeacher(@Param("teacherId") String teacherId);
+
 }

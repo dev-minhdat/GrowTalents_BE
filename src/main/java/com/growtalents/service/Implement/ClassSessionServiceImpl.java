@@ -1,8 +1,10 @@
 package com.growtalents.service.Implement;
 
 import com.growtalents.dto.request.ClassSession.ClassSessionRescheduleRequestDTO;
+import com.growtalents.dto.response.ClassSession.ClassSessionResponseDTO;
 import com.growtalents.enums.RescheduleStatus;
 import com.growtalents.exception.ResourceNotFoundException;
+import com.growtalents.mapper.ClassSessionMapper;
 import com.growtalents.model.ClassSession;
 import com.growtalents.repository.ClassSessionRepository;
 import com.growtalents.service.Interfaces.ClassSessionService;
@@ -10,13 +12,18 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ClassSessionServiceImpl implements ClassSessionService {
 
     private final ClassSessionRepository classSessionRepository;
+    private final ClassSessionMapper classSessionMapper;
 
     @Transactional
     @Override
@@ -54,7 +61,7 @@ public class ClassSessionServiceImpl implements ClassSessionService {
         cs.setProposedStartTime(dto.getProposedStartTime());
         cs.setRescheduleReason(dto.getRescheduleReason());
         cs.setRescheduleStatus(RescheduleStatus.PENDING);
-
+        cs.setRescheduleSubmittedAt(LocalDateTime.now());
         classSessionRepository.save(cs);
     }
 
@@ -101,4 +108,13 @@ public class ClassSessionServiceImpl implements ClassSessionService {
 
         classSessionRepository.save(cs);
     }
+
+    @Override
+    @Transactional
+    public List<ClassSessionResponseDTO> getAllRescheduled(String teacherId) {
+        var sessions = classSessionRepository.findReschedulesByTeacher(teacherId);
+        return classSessionMapper.toResponseDTO(sessions);
+    }
+
+
 }

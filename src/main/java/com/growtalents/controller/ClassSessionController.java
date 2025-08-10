@@ -41,4 +41,10 @@ public class ClassSessionController {
         service.rejectReschedule(sessionId, reason);
         return ResponseEntity.ok(GlobalResponse.success(null));
     }
+    // Lấy danh sách reschedule của 1 giáo viên
+    @GetMapping("/reschedules")
+    public ResponseEntity<GlobalResponse<?>> getReschedules(@RequestParam String teacherId) {
+        var data = service.getAllRescheduled(teacherId);
+        return ResponseEntity.ok(GlobalResponse.success(data));
+    }
 }
