@@ -4,20 +4,23 @@ import com.growtalents.dto.request.Assignment.AssignmentCreateRequestDTO;
 import com.growtalents.dto.response.Assignment.AssignmentResponseDTO;
 import com.growtalents.model.Assignment;
 import com.growtalents.model.Course;
+import com.growtalents.model.Lesson;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 // Xai component để DI ở Service
 @Component
 public class AssignmentMapper {
-    // Phan CourseId (Course) nhớ xử lý trên service
-    public Assignment toEntity (AssignmentCreateRequestDTO dto, String generateId, Course course) {
+    public Assignment toEntity (AssignmentCreateRequestDTO dto, String generateId, Lesson lesson) {
         return Assignment.builder()
                 .assignmentId(generateId)
                 .assignmentType(dto.getAssignmentType())
                 .title(dto.getTitle())
                 .description(dto.getDescription())
                 .uploadFileUrl(dto.getUploadFileUrl())
-                .course(course)
+                .lesson(lesson)
                 .build();
     }
     public AssignmentResponseDTO toResponseDTO (Assignment entity) {
@@ -27,8 +30,13 @@ public class AssignmentMapper {
                 .title(entity.getTitle())
                 .description(entity.getDescription())
                 .uploadFileUrl(entity.getUploadFileUrl())
-                .courseId(entity.getCourse().getCourseId())
-                .courseName(entity.getCourse().getName())
+                .lessonId(entity.getLesson().getLessonId())
+                .lessonTitle(entity.getLesson().getTitle())
                 .build();
+    }
+    public List<AssignmentResponseDTO> toResponseDTO(List<Assignment> assignments) {
+        return assignments.stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -4,6 +4,8 @@ import com.growtalents.enums.AssignmentType;
 import com.growtalents.model.Course;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,6 +15,7 @@ public class AssignmentCreateRequestDTO {
     private String title;
     private String description;
     private String uploadFileUrl;
+    private LocalDate deadline;
     private AssignmentType assignmentType;
-    private String courseId;
+    private String lessonId;
 }

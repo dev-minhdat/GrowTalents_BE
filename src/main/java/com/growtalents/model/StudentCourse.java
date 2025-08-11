@@ -26,6 +26,7 @@ public class StudentCourse {
     @Column (name = "dropped_out_date")
     private LocalDate droppedOutDate;
 
+    @Enumerated(EnumType.STRING)
     @Column (name = "status")
     private StudentCourseStatus status;
 

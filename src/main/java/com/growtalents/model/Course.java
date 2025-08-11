@@ -31,13 +31,13 @@ public class Course {
     @Column (name = "description")
     private String description;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column (name = "type" )
     private CourseType type;
 
-    @Lob
-    @Column (name = "syllabus")
-    private String syllabus;
+//    @Lob
+//    @Column (name = "syllabus")
+//    private String syllabus;
 
     @Column (name = "status")
     private CourseStatus status;

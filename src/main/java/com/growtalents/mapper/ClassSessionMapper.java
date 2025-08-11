@@ -6,6 +6,9 @@ import com.growtalents.model.ClassSession;
 import com.growtalents.model.Course;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class ClassSessionMapper {
     public ClassSession toEntity(ClassSessionCreateRequestDTO dto, String generateId, Course course) {
@@ -14,8 +17,8 @@ public class ClassSessionMapper {
                 .topic(dto.getTopic())
                 .sessionDate(dto.getSessionDate())
                 .durationInMinutes(dto.getDurationInMinutes())
-                .startDateTime(dto.getStartDateTime())
-                .endDateTime(dto.getEndDateTime())
+                .startTime(dto.getStartTime())
+                .endTime(dto.getEndTime())
                 .course(course)
                 .build();
     }
@@ -25,9 +28,15 @@ public class ClassSessionMapper {
                 .topic(dto.getTopic())
                 .sessionDate(dto.getSessionDate())
                 .durationInMinutes(dto.getDurationInMinutes())
-                .startDateTime(dto.getStartDateTime())
-                .endDateTime(dto.getEndDateTime())
+                .startTime(dto.getStartTime())
+                .endTime(dto.getEndTime())
                 .course(dto.getCourse())
                 .build();
     }
+    public List<ClassSessionResponseDTO> toResponseDTO(List<ClassSession> dtoList) {
+        return dtoList.stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }

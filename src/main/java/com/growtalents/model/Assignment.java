@@ -4,6 +4,8 @@ import com.growtalents.enums.AssignmentType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -27,11 +29,21 @@ public class Assignment {
     @Column (name="upload_file_url" , length = 1024)
     private String uploadFileUrl;
 
+    @Column(name="deadline")
+    private LocalDate deadline;
+
     @Column(name = "assignment_type")
     private AssignmentType assignmentType;
 
     @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn (name = "course_id",nullable = false)
-    private Course course;
+    @JoinColumn (name = "lesson_id",nullable = false)
+    private Lesson lesson;
 
+    @Column(name = "created_at")
+    private LocalDate createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) createdAt = LocalDate.now();
+    }
 }

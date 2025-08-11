@@ -23,6 +23,6 @@ public class Syllabus {
     @Column(nullable = false)
     private String title;
 
-    @Lob
-    private String description;
+//    @Lob
+//    private String description;
 }

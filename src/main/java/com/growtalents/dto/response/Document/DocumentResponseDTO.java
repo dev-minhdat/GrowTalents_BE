@@ -3,6 +3,7 @@ package com.growtalents.dto.response.Document;
 import com.growtalents.model.Lesson;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -15,6 +16,6 @@ public class DocumentResponseDTO {
     private String title;
     private String description;
     private String fileUrl;
-    private LocalDateTime uploadedAt;
+    private LocalDate uploadedAt;
     private Lesson lesson;
 }

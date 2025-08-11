@@ -6,6 +6,9 @@ import com.growtalents.model.Document;
 import com.growtalents.model.Lesson;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class DocumentMapper {
     public Document toEntity(DocumentCreateRequestDTO dto, String generateId, Lesson lesson) {
@@ -27,5 +30,10 @@ public class DocumentMapper {
                 .uploadedAt(document.getUploadedAt())
                 .lesson(document.getLesson())
                 .build();
+    }
+    public List<DocumentResponseDTO> toResponseDTO(List<Document> documents) {
+        return documents.stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 }

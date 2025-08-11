@@ -1,8 +1,12 @@
 package com.growtalents.model;
 
 
+import com.growtalents.enums.DocumentType;
 import jakarta.persistence.*;
 import lombok.*;
+
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,8 +26,12 @@ public class Document {
     @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private DocumentType type;
 
     @Lob
     private String description;
@@ -32,5 +40,5 @@ public class Document {
     private String fileUrl;
 
     @Column(name = "uploaded_at")
-    private LocalDateTime uploadedAt;
+    private LocalDate uploadedAt;
 }
