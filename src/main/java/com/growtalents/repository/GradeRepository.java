@@ -5,32 +5,46 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, String> {
 
-    // Code từ TuDat
-    @Query("SELECT g FROM Grade g " +
-           "JOIN FETCH g.assignment " +
-           "JOIN FETCH g.course " +
-           "WHERE g.student.userId = :studentId " +
-           "AND g.assignment IS NOT NULL " +
-           "AND g.comment IS NOT NULL " +
-           "ORDER BY g.gradeId DESC")
+    // Lấy các grade có comment của 1 student, mới nhất trước
+    @Query("""
+        select g
+        from Grade g
+        join g.assignment a
+        join a.lesson l
+        join l.chapter ch
+        join ch.syllabus sy
+        join sy.course c
+        where g.student.userId = :studentId
+          and g.comment is not null
+        order by g.gradeId desc
+    """)
     List<Grade> findStudentGradeCommentsOrderByNewest(@Param("studentId") String studentId);
 
-    @Query("SELECT AVG(g.score) FROM Grade g " +
-           "WHERE g.student.userId = :studentId " +
-           "AND g.score IS NOT NULL")
+    // Trung bình điểm của 1 student (chỉ tính grade có score)
+    @Query("""
+        select avg(g.score)
+        from Grade g
+        where g.student.userId = :studentId
+          and g.score is not null
+    """)
     Float calculateAverageScoreByStudentId(@Param("studentId") String studentId);
 
-    @Query("SELECT g FROM Grade g " +
-           "JOIN FETCH g.assignment " +
-           "JOIN FETCH g.course " +
-           "WHERE g.student.userId = :studentId " +
-           "AND g.assignment.assignmentId = :assignmentId")
+    // Lấy grade theo student + assignment (không join course trực tiếp vì Grade không có field này)
+    @Query("""
+        select g
+        from Grade g
+        join g.assignment a
+        where g.student.userId = :studentId
+          and a.assignmentId = :assignmentId
+    """)
     List<Grade> findByStudentIdAndAssignmentId(
             @Param("studentId") String studentId,
-            @Param("assignmentId") String assignmentId);
+            @Param("assignmentId") String assignmentId
+    );
 }

@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -15,8 +16,8 @@ public class StudentClassSessionResponseDTO {
     private LocalDate sessionDate;
     private String topic;
     private int durationInMinutes;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private String courseId;
     private String courseName;
     private String courseType;
