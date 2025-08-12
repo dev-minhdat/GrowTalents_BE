@@ -21,7 +21,7 @@ public interface ClassSessionRepository extends JpaRepository<ClassSession, Stri
            "    AND sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED" +
            ") " +
            "AND cs.sessionDate BETWEEN :startDate AND :endDate " +
-           "ORDER BY cs.sessionDate ASC, cs.startDateTime ASC")
+           "ORDER BY cs.sessionDate ASC, cs.startTime ASC")
     List<ClassSession> findStudentClassSessionsBetweenDates(
             @Param("studentId") String studentId,
             @Param("startDate") LocalDate startDate,

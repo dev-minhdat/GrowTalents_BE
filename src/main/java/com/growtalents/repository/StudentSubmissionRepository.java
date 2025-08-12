@@ -11,25 +11,46 @@ import java.util.Optional;
 
 @Repository
 public interface StudentSubmissionRepository extends JpaRepository<StudentSubmission, String> {
-    
-    @Query("SELECT ss FROM StudentSubmission ss " +
-           "WHERE ss.student.userId = :studentId " +
-           "AND ss.assignment.assignmentId = :assignmentId")
+
+    // OK: lấy submission theo student + assignment
+    @Query("""
+        select ss
+        from StudentSubmission ss
+        where ss.student.userId = :studentId
+          and ss.assignment.assignmentId = :assignmentId
+    """)
     Optional<StudentSubmission> findByStudentIdAndAssignmentId(
-            @Param("studentId") String studentId, 
-            @Param("assignmentId") String assignmentId);
-    
-    @Query("SELECT ss FROM StudentSubmission ss " +
-           "WHERE ss.student.userId = :studentId " +
-           "ORDER BY ss.submittedAt DESC")
+            @Param("studentId") String studentId,
+            @Param("assignmentId") String assignmentId
+    );
+
+    // OK: list submission của 1 student mới nhất trước
+    @Query("""
+        select ss
+        from StudentSubmission ss
+        where ss.student.userId = :studentId
+        order by ss.submittedAt desc
+    """)
     List<StudentSubmission> findByStudentIdOrderBySubmittedAtDesc(@Param("studentId") String studentId);
-    
-    @Query("SELECT COUNT(ss) FROM StudentSubmission ss " +
-           "WHERE ss.student.userId = :studentId " +
-           "AND ss.assignment.course.courseId IN (" +
-           "    SELECT sc.course.courseId FROM StudentCourse sc " +
-           "    WHERE sc.student.userId = :studentId " +
-           "    AND sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED" +
-           ")")
+
+    // FIX: đếm số bài đã nộp của student trong các khóa mà student ENROLLED
+    // (nếu cho phép nộp nhiều lần/assignment, nên dùng COUNT DISTINCT)
+    @Query("""
+        select count(distinct ss.assignment.assignmentId)
+        from StudentSubmission ss
+        join ss.assignment a
+        join a.lesson l
+        join l.chapter ch
+        join ch.syllabus sy
+        join sy.course c
+        where ss.student.userId = :studentId
+          and exists (
+            select 1
+            from StudentCourse sc
+            where sc.course = c
+              and sc.student.userId = :studentId
+              and sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED
+          )
+    """)
     int countCompletedAssignmentsByStudentId(@Param("studentId") String studentId);
 }
