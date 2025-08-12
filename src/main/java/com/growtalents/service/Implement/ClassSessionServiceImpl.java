@@ -8,14 +8,13 @@ import com.growtalents.mapper.ClassSessionMapper;
 import com.growtalents.model.ClassSession;
 import com.growtalents.repository.ClassSessionRepository;
 import com.growtalents.service.Interfaces.ClassSessionService;
+import com.growtalents.service.Interfaces.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +23,7 @@ public class ClassSessionServiceImpl implements ClassSessionService {
 
     private final ClassSessionRepository classSessionRepository;
     private final ClassSessionMapper classSessionMapper;
+    private final NotificationService notificationService; // <-- thêm
 
     @Transactional
     @Override
@@ -36,10 +36,14 @@ public class ClassSessionServiceImpl implements ClassSessionService {
             throw new IllegalStateException("Buổi học này đã có đề xuất dời lịch trước đó.");
         }
 
+        if (dto.getProposedDate() == null || dto.getProposedStartTime() == null) {
+            throw new IllegalArgumentException("Thiếu ngày/giờ đề xuất.");
+        }
+
         // BE tự tính end từ duration
         LocalTime proposedEnd = dto.getProposedStartTime().plusMinutes(cs.getDurationInMinutes());
 
-        // (Optional) không cho qua ngày – tuỳ rule của em
+        // (Optional) không cho qua ngày – nếu end < start
         if (proposedEnd.isBefore(dto.getProposedStartTime())) {
             throw new IllegalArgumentException("Khung giờ không hợp lệ (qua ngày).");
         }
@@ -74,6 +78,20 @@ public class ClassSessionServiceImpl implements ClassSessionService {
         if (cs.getRescheduleStatus() != RescheduleStatus.PENDING) {
             throw new IllegalStateException("Chỉ duyệt khi đang ở trạng thái PENDING.");
         }
+        if (cs.getProposedDate() == null || cs.getProposedStartTime() == null) {
+            throw new IllegalStateException("Đề xuất không hợp lệ: thiếu ngày/giờ.");
+        }
+
+        // Giữ bản cũ để tạo summary thay đổi
+        ClassSession before = ClassSession.builder()
+                .sessionId(cs.getSessionId())
+                .sessionDate(cs.getSessionDate())
+                .startTime(cs.getStartTime())
+                .endTime(cs.getEndTime())
+                .topic(cs.getTopic())
+                .course(cs.getCourse())
+                .durationInMinutes(cs.getDurationInMinutes())
+                .build();
 
         // Gán originalDate nếu chưa có
         if (cs.getOriginalDate() == null) {
@@ -86,7 +104,19 @@ public class ClassSessionServiceImpl implements ClassSessionService {
         cs.setEndTime(cs.getProposedStartTime().plusMinutes(cs.getDurationInMinutes()));
         cs.setRescheduleStatus(RescheduleStatus.APPROVED);
 
+        // (tuỳ chọn) clear đề xuất sau khi áp dụng
+        // cs.setProposedDate(null);
+        // cs.setProposedStartTime(null);
+        // cs.setRescheduleReason(null);
+
         classSessionRepository.save(cs);
+
+        // Tạo notification cho tất cả học sinh ENROLLED
+        String summary = buildChangeSummary(before, cs);
+        notificationService.createScheduleChangeForCourseAndStudents(
+                cs.getCourse().getCourseId(),
+                summary
+        );
     }
 
     @Transactional
@@ -116,5 +146,30 @@ public class ClassSessionServiceImpl implements ClassSessionService {
         return classSessionMapper.toResponseDTO(sessions);
     }
 
+    // ================== helpers ==================
 
+    private String buildChangeSummary(ClassSession before, ClassSession after) {
+        String topic = (after.getTopic() != null && !after.getTopic().isBlank())
+                ? after.getTopic() : "(Không tiêu đề)";
+
+        String oldStr = String.format("%s %s–%s",
+                safeDate(before.getSessionDate()),
+                safeTime(before.getStartTime()),
+                safeTime(before.getEndTime()));
+
+        String newStr = String.format("%s %s–%s",
+                safeDate(after.getSessionDate()),
+                safeTime(after.getStartTime()),
+                safeTime(after.getEndTime()));
+
+        return "Buổi học \"" + topic + "\" đổi từ " + oldStr + " → " + newStr;
+    }
+
+    private String safeDate(java.time.LocalDate d) {
+        return d == null ? "?" : d.toString();
+    }
+
+    private String safeTime(java.time.LocalTime t) {
+        return t == null ? "?" : t.toString();
+    }
 }

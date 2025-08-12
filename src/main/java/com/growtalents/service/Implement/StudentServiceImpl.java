@@ -104,7 +104,7 @@ public class StudentServiceImpl implements StudentService {
         Float averageScore = gradeRepository.calculateAverageScoreByStudentId(studentId);
 
         // Count completed assignments
-        int completedAssignments = studentSubmissionRepository.countCompletedAssignmentsByStudentId(studentId);
+        int completedAssignments = (int)studentSubmissionRepository.countCompletedAssignmentsByStudentId(studentId);
 
         // Count total assignments
         int totalAssignments = assignmentRepository.countTotalAssignmentsByStudentId(studentId);
