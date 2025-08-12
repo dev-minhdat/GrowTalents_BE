@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
                 GlobalResponse.error("Validation Failed", 400, errors)
         );
     }
+
     // 404
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<GlobalResponse<Void>> handleNotFound(ResourceNotFoundException ex) {
@@ -32,6 +33,7 @@ public class GlobalExceptionHandler {
                 GlobalResponse.error(ex.getMessage(), 404)
         );
     }
+
     // 400
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<GlobalResponse<Void>> handleBadRequest(BadRequestException ex) {
@@ -39,6 +41,7 @@ public class GlobalExceptionHandler {
                 GlobalResponse.error(ex.getMessage(), 400)
         );
     }
+
     // 500
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GlobalResponse<Void>> handleAllOtherExceptions(Exception ex) {
@@ -47,6 +50,7 @@ public class GlobalExceptionHandler {
                 GlobalResponse.error("Unexpected error: " + ex.getMessage(), 500)
         );
     }
+
     // Lỗi định dạng ngày
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<GlobalResponse<Void>> handleInvalidFormat(HttpMessageNotReadableException ex) {
@@ -62,6 +66,4 @@ public class GlobalExceptionHandler {
                 GlobalResponse.error("Malformed JSON request", 400)
         );
     }
-
 }
-
