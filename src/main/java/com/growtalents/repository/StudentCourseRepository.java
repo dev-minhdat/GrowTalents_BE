@@ -30,4 +30,6 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, St
            "WHERE sc.student.userId = :studentId " +
            "AND sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED")
     int countEnrolledCoursesByStudentId(@Param("studentId") String studentId);
+
+    List<StudentCourse> findAllByCourse_CourseIdAndStatus(String courseId, StudentCourseStatus status);
 }

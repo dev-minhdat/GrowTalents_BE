@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface StudentSubmissionRepository extends JpaRepository<StudentSubmission, String> {
 
-    // OK: lấy submission theo student + assignment
+    // Lấy submission theo student + assignment
     @Query("""
         select ss
         from StudentSubmission ss
@@ -24,7 +24,7 @@ public interface StudentSubmissionRepository extends JpaRepository<StudentSubmis
             @Param("assignmentId") String assignmentId
     );
 
-    // OK: list submission của 1 student mới nhất trước
+    // List submission của 1 student mới nhất trước
     @Query("""
         select ss
         from StudentSubmission ss
@@ -33,8 +33,7 @@ public interface StudentSubmissionRepository extends JpaRepository<StudentSubmis
     """)
     List<StudentSubmission> findByStudentIdOrderBySubmittedAtDesc(@Param("studentId") String studentId);
 
-    // FIX: đếm số bài đã nộp của student trong các khóa mà student ENROLLED
-    // (nếu cho phép nộp nhiều lần/assignment, nên dùng COUNT DISTINCT)
+    // Đếm số bài đã nộp của student trong các khóa đã ENROLLED (distinct để tránh nộp nhiều lần)
     @Query("""
         select count(distinct ss.assignment.assignmentId)
         from StudentSubmission ss
@@ -52,5 +51,55 @@ public interface StudentSubmissionRepository extends JpaRepository<StudentSubmis
               and sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED
           )
     """)
-    int countCompletedAssignmentsByStudentId(@Param("studentId") String studentId);
+    long countCompletedAssignmentsByStudentId(@Param("studentId") String studentId);
+
+    // Kiểm tra đã nộp hay chưa cho 1 assignment cụ thể
+    boolean existsByAssignment_AssignmentIdAndStudent_UserId(String assignmentId, String studentId);
+
+    // Danh sách assignmentId mà học sinh đã nộp (trong 1 khóa cụ thể), sắp theo lần nộp mới nhất
+    @Query("""
+        select a.assignmentId
+        from StudentSubmission ss
+        join ss.assignment a
+        join a.lesson l
+        join l.chapter ch
+        join ch.syllabus sy
+        join sy.course c
+        where ss.student.userId = :studentId
+          and c.courseId = :courseId
+        group by a.assignmentId
+        order by max(ss.submittedAt) desc
+    """)
+    List<String> findSubmittedAssignmentIdsInCourse(
+            @Param("studentId") String studentId,
+            @Param("courseId") String courseId
+    );
+
+    // Số lượng bài đã nộp trong 1 khóa (distinct để tránh nộp nhiều lần)
+    @Query("""
+        select count(distinct a.assignmentId)
+        from StudentSubmission ss
+        join ss.assignment a
+        join a.lesson l
+        join l.chapter ch
+        join ch.syllabus sy
+        join sy.course c
+        where ss.student.userId = :studentId
+          and c.courseId = :courseId
+    """)
+    long countSubmittedAssignmentsInCourse(
+            @Param("studentId") String studentId,
+            @Param("courseId") String courseId
+    );
+
+    // Danh sách assignmentId đã nộp của học sinh trên tất cả các khóa, sắp theo lần nộp mới nhất
+    @Query("""
+        select a.assignmentId
+        from StudentSubmission ss
+        join ss.assignment a
+        where ss.student.userId = :studentId
+        group by a.assignmentId
+        order by max(ss.submittedAt) desc
+    """)
+    List<String> findSubmittedAssignmentIdsForStudent(@Param("studentId") String studentId);
 }

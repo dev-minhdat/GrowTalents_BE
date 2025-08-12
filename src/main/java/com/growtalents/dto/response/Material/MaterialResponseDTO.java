@@ -1,9 +1,9 @@
 package com.growtalents.dto.response.Material;
 
+import com.growtalents.enums.MaterialType;
 import com.growtalents.model.Course;
 import lombok.*;
 
-import java.time.LocalDateTime;
 
 
 @AllArgsConstructor
@@ -13,11 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class MaterialResponseDTO {
     private String materialId;
-    private String title;
-    private String description;
-    private String fileUrl;
-    private String uploadedByUserId;
-    private String uploadedByUserName;
-    private LocalDateTime uploadDate;
-    private Course course;
+    private String courseId;
+    private MaterialType type;
+    private String content;
 }
