@@ -20,6 +20,12 @@ public class Attendance {
     @Enumerated(EnumType.STRING)
     @Column (name = "status")
     private AttendanceStatus status;
+    
+    @Column (name = "note", length = 500)
+    private String note;
+    
+    @Column (name = "attendance_date")
+    private String attendanceDate;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name = "session_id", nullable = false)

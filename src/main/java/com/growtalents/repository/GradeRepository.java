@@ -10,10 +10,9 @@ import java.util.List;
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, String> {
 
-    // Code từ TuDat
+    // Code từ TuDat - Fixed to remove course relationship
     @Query("SELECT g FROM Grade g " +
            "JOIN FETCH g.assignment " +
-           "JOIN FETCH g.course " +
            "WHERE g.student.userId = :studentId " +
            "AND g.assignment IS NOT NULL " +
            "AND g.comment IS NOT NULL " +
@@ -27,7 +26,6 @@ public interface GradeRepository extends JpaRepository<Grade, String> {
 
     @Query("SELECT g FROM Grade g " +
            "JOIN FETCH g.assignment " +
-           "JOIN FETCH g.course " +
            "WHERE g.student.userId = :studentId " +
            "AND g.assignment.assignmentId = :assignmentId")
     List<Grade> findByStudentIdAndAssignmentId(

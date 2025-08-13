@@ -25,8 +25,13 @@ public interface StudentSubmissionRepository extends JpaRepository<StudentSubmis
     List<StudentSubmission> findByStudentIdOrderBySubmittedAtDesc(@Param("studentId") String studentId);
     
     @Query("SELECT COUNT(ss) FROM StudentSubmission ss " +
+           "JOIN ss.assignment a " +
+           "JOIN a.lesson l " +
+           "JOIN l.chapter ch " +
+           "JOIN ch.syllabus s " +
+           "JOIN s.course c " +
            "WHERE ss.student.userId = :studentId " +
-           "AND ss.assignment.course.courseId IN (" +
+           "AND c.courseId IN (" +
            "    SELECT sc.course.courseId FROM StudentCourse sc " +
            "    WHERE sc.student.userId = :studentId " +
            "    AND sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED" +

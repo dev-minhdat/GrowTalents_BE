@@ -4,6 +4,8 @@ import com.growtalents.dto.response.Student.*;
 import com.growtalents.model.*;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class StudentMapper {
 
@@ -13,8 +15,8 @@ public class StudentMapper {
                 .sessionDate(session.getSessionDate())
                 .topic(session.getTopic())
                 .durationInMinutes(session.getDurationInMinutes())
-                .startDateTime(session.getStartDateTime())
-                .endDateTime(session.getEndDateTime())
+                .startDateTime(LocalDateTime.from(session.getStartTime()))
+                .endDateTime(LocalDateTime.from(session.getEndTime()))
                 .courseId(session.getCourse().getCourseId())
                 .courseName(session.getCourse().getName())
                 .courseType(session.getCourse().getType() != null ? session.getCourse().getType().getDisplayName() : null)
@@ -46,8 +48,8 @@ public class StudentMapper {
                 .description(assignment.getDescription())
                 .assignmentType(assignment.getAssignmentType())
                 .uploadFileUrl(assignment.getUploadFileUrl())
-                .courseId(assignment.getCourse().getCourseId())
-                .courseName(assignment.getCourse().getName())
+                .courseId(assignment.getLesson().getChapter().getSyllabus().getCourse().getCourseId())
+                .courseName(assignment.getLesson().getChapter().getSyllabus().getCourse().getName())
                 .createdAt(null) // Will be updated when createdAt field is added
                 .hasSubmitted(submission != null)
                 .submittedAt(submission != null ? submission.getSubmittedAt() : null)
@@ -59,7 +61,7 @@ public class StudentMapper {
 
     public static StudentGradeCommentResponseDTO toGradeCommentResponseDTO(Grade grade) {
         Assignment assignment = grade.getAssignment();
-        Course course = grade.getCourse();
+        Course course = assignment.getLesson().getChapter().getSyllabus().getCourse();
         
         return StudentGradeCommentResponseDTO.builder()
                 .assignmentId(assignment.getAssignmentId())

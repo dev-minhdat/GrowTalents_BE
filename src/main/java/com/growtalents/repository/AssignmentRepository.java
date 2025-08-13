@@ -9,16 +9,22 @@ import java.util.List;
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, String> {
 
-    // Code từ TuDat
+    // Code từ TuDat - Fixed queries
     @Query("SELECT a FROM Assignment a " +
-           "JOIN FETCH a.course " +
-           "WHERE a.course.courseId = :courseId " +
+           "JOIN FETCH a.lesson l " +
+           "JOIN FETCH l.chapter ch " +
+           "JOIN FETCH ch.syllabus s " +
+           "JOIN FETCH s.course c " +
+           "WHERE c.courseId = :courseId " +
            "ORDER BY a.assignmentId DESC")
     List<Assignment> findByCourseIdOrderByCreatedDateDesc(@Param("courseId") String courseId);
 
     @Query("SELECT a FROM Assignment a " +
-           "JOIN FETCH a.course " +
-           "WHERE a.course.courseId IN (" +
+           "JOIN a.lesson l " +
+           "JOIN l.chapter ch " +
+           "JOIN ch.syllabus s " +
+           "JOIN s.course c " +
+           "WHERE c.courseId IN (" +
            "    SELECT sc.course.courseId FROM StudentCourse sc " +
            "    WHERE sc.student.userId = :studentId " +
            "    AND sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED" +
@@ -27,7 +33,11 @@ public interface AssignmentRepository extends JpaRepository<Assignment, String> 
     List<Assignment> findStudentAssignmentsOrderByNewest(@Param("studentId") String studentId);
 
     @Query("SELECT COUNT(a) FROM Assignment a " +
-           "WHERE a.course.courseId IN (" +
+           "JOIN a.lesson l " +
+           "JOIN l.chapter ch " +
+           "JOIN ch.syllabus s " +
+           "JOIN s.course c " +
+           "WHERE c.courseId IN (" +
            "    SELECT sc.course.courseId FROM StudentCourse sc " +
            "    WHERE sc.student.userId = :studentId " +
            "    AND sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED" +
