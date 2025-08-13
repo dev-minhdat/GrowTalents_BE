@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, String> {
 
-    // Lấy các grade có comment của 1 student, mới nhất trước
+    // Lấy grade có comment của student, mới nhất trước
     @Query("""
         select g
         from Grade g
@@ -26,7 +26,7 @@ public interface GradeRepository extends JpaRepository<Grade, String> {
     """)
     List<Grade> findStudentGradeCommentsOrderByNewest(@Param("studentId") String studentId);
 
-    // Trung bình điểm của 1 student (chỉ tính grade có score)
+    // Trung bình điểm của student
     @Query("""
         select avg(g.score)
         from Grade g
@@ -35,7 +35,7 @@ public interface GradeRepository extends JpaRepository<Grade, String> {
     """)
     Float calculateAverageScoreByStudentId(@Param("studentId") String studentId);
 
-    // Lấy grade theo student + assignment (không join course trực tiếp vì Grade không có field này)
+    // Lấy grade theo student + assignment
     @Query("""
         select g
         from Grade g
