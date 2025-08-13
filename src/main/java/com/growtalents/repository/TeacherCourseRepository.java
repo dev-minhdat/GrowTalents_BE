@@ -1,6 +1,7 @@
 package com.growtalents.repository;
 
 import com.growtalents.dto.response.Course.CourseResponseDTO;
+import com.growtalents.enums.AssignedRole;
 import com.growtalents.model.TeacherCourse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,5 +23,6 @@ public interface TeacherCourseRepository extends JpaRepository<TeacherCourse, In
          and c.status = com.growtalents.enums.CourseStatus.ACTIVE
        """)
     List<CourseResponseDTO> findActiveCoursesByTeacher(@Param("teacherId") String teacherId);
+
 
 }

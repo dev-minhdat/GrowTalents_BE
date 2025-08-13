@@ -1,18 +1,22 @@
 package com.growtalents.model;
 
+import com.growtalents.enums.MaterialType;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 @Entity
-@Table(name = "Material")
+@Table(
+        name = "Material",
+        uniqueConstraints = {
+                // Đảm bảo mỗi course chỉ có 1 bản ghi cho mỗi loại thông tin
+                @UniqueConstraint(name = "uk_material_course_type", columnNames = {"course_id", "type"})
+        }
+)
 public class Material {
 
     @Id
@@ -23,19 +27,10 @@ public class Material {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "title")
-    private String title;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, length = 40)
+    private MaterialType type; // COURSE_DESCRIPTION, LEARNING_OBJECTIVES, TEACHER_INFO
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
-
-    @Column(name = "file_url", length = 1024)
-    private String fileUrl;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uploaded_by")
-    private AppUser uploadedBy;
-
-    @Column(name = "upload_date")
-    private LocalDateTime uploadDate;
+    @Column(name = "content", columnDefinition = "TEXT")
+    private String content; // Nội dung chính của loại thông tin
 }

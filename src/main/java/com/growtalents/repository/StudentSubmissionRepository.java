@@ -11,30 +11,95 @@ import java.util.Optional;
 
 @Repository
 public interface StudentSubmissionRepository extends JpaRepository<StudentSubmission, String> {
-    
-    @Query("SELECT ss FROM StudentSubmission ss " +
-           "WHERE ss.student.userId = :studentId " +
-           "AND ss.assignment.assignmentId = :assignmentId")
+
+    // Lấy submission theo student + assignment
+    @Query("""
+        select ss
+        from StudentSubmission ss
+        where ss.student.userId = :studentId
+          and ss.assignment.assignmentId = :assignmentId
+    """)
     Optional<StudentSubmission> findByStudentIdAndAssignmentId(
-            @Param("studentId") String studentId, 
-            @Param("assignmentId") String assignmentId);
-    
-    @Query("SELECT ss FROM StudentSubmission ss " +
-           "WHERE ss.student.userId = :studentId " +
-           "ORDER BY ss.submittedAt DESC")
+            @Param("studentId") String studentId,
+            @Param("assignmentId") String assignmentId
+    );
+
+    // List submission của student, mới nhất trước
+    @Query("""
+        select ss
+        from StudentSubmission ss
+        where ss.student.userId = :studentId
+        order by ss.submittedAt desc
+    """)
     List<StudentSubmission> findByStudentIdOrderBySubmittedAtDesc(@Param("studentId") String studentId);
-    
-    @Query("SELECT COUNT(ss) FROM StudentSubmission ss " +
-           "JOIN ss.assignment a " +
-           "JOIN a.lesson l " +
-           "JOIN l.chapter ch " +
-           "JOIN ch.syllabus s " +
-           "JOIN s.course c " +
-           "WHERE ss.student.userId = :studentId " +
-           "AND c.courseId IN (" +
-           "    SELECT sc.course.courseId FROM StudentCourse sc " +
-           "    WHERE sc.student.userId = :studentId " +
-           "    AND sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED" +
-           ")")
-    int countCompletedAssignmentsByStudentId(@Param("studentId") String studentId);
+
+    // Đếm số assignment đã nộp của student trong các khóa đã ENROLLED
+    @Query("""
+        select count(distinct ss.assignment.assignmentId)
+        from StudentSubmission ss
+        join ss.assignment a
+        join a.lesson l
+        join l.chapter ch
+        join ch.syllabus sy
+        join sy.course c
+        where ss.student.userId = :studentId
+          and exists (
+            select 1
+            from StudentCourse sc
+            where sc.course = c
+              and sc.student.userId = :studentId
+              and sc.status = com.growtalents.enums.StudentCourseStatus.ENROLLED
+          )
+    """)
+    long countCompletedAssignmentsByStudentId(@Param("studentId") String studentId);
+
+    // Kiểm tra đã nộp hay chưa
+    boolean existsByAssignment_AssignmentIdAndStudent_UserId(String assignmentId, String studentId);
+
+    // Danh sách assignmentId đã nộp trong 1 course
+    @Query("""
+        select a.assignmentId
+        from StudentSubmission ss
+        join ss.assignment a
+        join a.lesson l
+        join l.chapter ch
+        join ch.syllabus sy
+        join sy.course c
+        where ss.student.userId = :studentId
+          and c.courseId = :courseId
+        group by a.assignmentId
+        order by max(ss.submittedAt) desc
+    """)
+    List<String> findSubmittedAssignmentIdsInCourse(
+            @Param("studentId") String studentId,
+            @Param("courseId") String courseId
+    );
+
+    // Đếm số assignment đã nộp trong 1 course
+    @Query("""
+        select count(distinct a.assignmentId)
+        from StudentSubmission ss
+        join ss.assignment a
+        join a.lesson l
+        join l.chapter ch
+        join ch.syllabus sy
+        join sy.course c
+        where ss.student.userId = :studentId
+          and c.courseId = :courseId
+    """)
+    long countSubmittedAssignmentsInCourse(
+            @Param("studentId") String studentId,
+            @Param("courseId") String courseId
+    );
+
+    // Danh sách assignmentId đã nộp trên tất cả course
+    @Query("""
+        select a.assignmentId
+        from StudentSubmission ss
+        join ss.assignment a
+        where ss.student.userId = :studentId
+        group by a.assignmentId
+        order by max(ss.submittedAt) desc
+    """)
+    List<String> findSubmittedAssignmentIdsForStudent(@Param("studentId") String studentId);
 }

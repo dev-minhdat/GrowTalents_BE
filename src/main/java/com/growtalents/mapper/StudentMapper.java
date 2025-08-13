@@ -4,8 +4,6 @@ import com.growtalents.dto.response.Student.*;
 import com.growtalents.model.*;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 public class StudentMapper {
 
@@ -15,8 +13,8 @@ public class StudentMapper {
                 .sessionDate(session.getSessionDate())
                 .topic(session.getTopic())
                 .durationInMinutes(session.getDurationInMinutes())
-                .startDateTime(LocalDateTime.from(session.getStartTime()))
-                .endDateTime(LocalDateTime.from(session.getEndTime()))
+                .startTime(session.getStartTime())
+                .endTime(session.getEndTime())
                 .courseId(session.getCourse().getCourseId())
                 .courseName(session.getCourse().getName())
                 .courseType(session.getCourse().getType() != null ? session.getCourse().getType().getDisplayName() : null)
@@ -39,8 +37,8 @@ public class StudentMapper {
                 .build();
     }
 
-    public static StudentAssignmentResponseDTO toAssignmentResponseDTO(Assignment assignment, 
-                                                                       StudentSubmission submission, 
+    public static StudentAssignmentResponseDTO toAssignmentResponseDTO(Assignment assignment,
+                                                                       StudentSubmission submission,
                                                                        Grade grade) {
         return StudentAssignmentResponseDTO.builder()
                 .assignmentId(assignment.getAssignmentId())
@@ -62,7 +60,7 @@ public class StudentMapper {
     public static StudentGradeCommentResponseDTO toGradeCommentResponseDTO(Grade grade) {
         Assignment assignment = grade.getAssignment();
         Course course = assignment.getLesson().getChapter().getSyllabus().getCourse();
-        
+
         return StudentGradeCommentResponseDTO.builder()
                 .assignmentId(assignment.getAssignmentId())
                 .assignmentTitle(assignment.getTitle())
@@ -84,10 +82,10 @@ public class StudentMapper {
             int totalCoursesEnrolled,
             int attendedSessions,
             int totalSessions) {
-        
+
         int pendingAssignments = totalAssignments - completedAssignments;
         Float attendanceRate = totalSessions > 0 ? (float) attendedSessions / totalSessions * 100 : 0.0f;
-        
+
         return StudentStatisticsResponseDTO.builder()
                 .averageScore(averageScore != null ? averageScore : 0.0f)
                 .completedAssignments(completedAssignments)
