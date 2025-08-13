@@ -57,7 +57,7 @@ build/
 *.env
 application.yml
 application-*.yml
-application-*.properties
+# application-*.properties
 !application.properties   
 
 # ================================
