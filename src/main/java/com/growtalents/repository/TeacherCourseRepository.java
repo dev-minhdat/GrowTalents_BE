@@ -24,5 +24,8 @@ public interface TeacherCourseRepository extends JpaRepository<TeacherCourse, In
        """)
     List<CourseResponseDTO> findActiveCoursesByTeacher(@Param("teacherId") String teacherId);
 
+    // Method cần thiết cho AttendanceServiceImpl
+    @Query("SELECT tc FROM TeacherCourse tc WHERE tc.teacher.userId = :teacherId")
+    List<TeacherCourse> findByTeacherUserId(@Param("teacherId") String teacherId);
 
 }

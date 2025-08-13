@@ -24,7 +24,7 @@ public interface StudentSubmissionRepository extends JpaRepository<StudentSubmis
             @Param("assignmentId") String assignmentId
     );
 
-    // List submission của 1 student mới nhất trước
+    // List submission của student, mới nhất trước
     @Query("""
         select ss
         from StudentSubmission ss
@@ -33,7 +33,7 @@ public interface StudentSubmissionRepository extends JpaRepository<StudentSubmis
     """)
     List<StudentSubmission> findByStudentIdOrderBySubmittedAtDesc(@Param("studentId") String studentId);
 
-    // Đếm số bài đã nộp của student trong các khóa đã ENROLLED (distinct để tránh nộp nhiều lần)
+    // Đếm số assignment đã nộp của student trong các khóa đã ENROLLED
     @Query("""
         select count(distinct ss.assignment.assignmentId)
         from StudentSubmission ss
@@ -53,10 +53,10 @@ public interface StudentSubmissionRepository extends JpaRepository<StudentSubmis
     """)
     long countCompletedAssignmentsByStudentId(@Param("studentId") String studentId);
 
-    // Kiểm tra đã nộp hay chưa cho 1 assignment cụ thể
+    // Kiểm tra đã nộp hay chưa
     boolean existsByAssignment_AssignmentIdAndStudent_UserId(String assignmentId, String studentId);
 
-    // Danh sách assignmentId mà học sinh đã nộp (trong 1 khóa cụ thể), sắp theo lần nộp mới nhất
+    // Danh sách assignmentId đã nộp trong 1 course
     @Query("""
         select a.assignmentId
         from StudentSubmission ss
@@ -75,7 +75,7 @@ public interface StudentSubmissionRepository extends JpaRepository<StudentSubmis
             @Param("courseId") String courseId
     );
 
-    // Số lượng bài đã nộp trong 1 khóa (distinct để tránh nộp nhiều lần)
+    // Đếm số assignment đã nộp trong 1 course
     @Query("""
         select count(distinct a.assignmentId)
         from StudentSubmission ss
@@ -92,7 +92,7 @@ public interface StudentSubmissionRepository extends JpaRepository<StudentSubmis
             @Param("courseId") String courseId
     );
 
-    // Danh sách assignmentId đã nộp của học sinh trên tất cả các khóa, sắp theo lần nộp mới nhất
+    // Danh sách assignmentId đã nộp trên tất cả course
     @Query("""
         select a.assignmentId
         from StudentSubmission ss

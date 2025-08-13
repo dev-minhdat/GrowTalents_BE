@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ClassSessionRepository extends JpaRepository<ClassSession, String> {
 
-    // Code từ TuDat
+    // Code từ TuDat - Fixed field name
     @Query("SELECT cs FROM ClassSession cs " +
            "JOIN FETCH cs.course " +
            "WHERE cs.course.courseId IN (" +

@@ -37,8 +37,8 @@ public class StudentMapper {
                 .build();
     }
 
-    public static StudentAssignmentResponseDTO toAssignmentResponseDTO(Assignment assignment, 
-                                                                       StudentSubmission submission, 
+    public static StudentAssignmentResponseDTO toAssignmentResponseDTO(Assignment assignment,
+                                                                       StudentSubmission submission,
                                                                        Grade grade) {
         return StudentAssignmentResponseDTO.builder()
                 .assignmentId(assignment.getAssignmentId())
@@ -59,8 +59,8 @@ public class StudentMapper {
 
     public static StudentGradeCommentResponseDTO toGradeCommentResponseDTO(Grade grade) {
         Assignment assignment = grade.getAssignment();
-        Course course = grade.getAssignment().getLesson().getChapter().getSyllabus().getCourse();
-        
+        Course course = assignment.getLesson().getChapter().getSyllabus().getCourse();
+
         return StudentGradeCommentResponseDTO.builder()
                 .assignmentId(assignment.getAssignmentId())
                 .assignmentTitle(assignment.getTitle())
@@ -82,10 +82,10 @@ public class StudentMapper {
             int totalCoursesEnrolled,
             int attendedSessions,
             int totalSessions) {
-        
+
         int pendingAssignments = totalAssignments - completedAssignments;
         Float attendanceRate = totalSessions > 0 ? (float) attendedSessions / totalSessions * 100 : 0.0f;
-        
+
         return StudentStatisticsResponseDTO.builder()
                 .averageScore(averageScore != null ? averageScore : 0.0f)
                 .completedAssignments(completedAssignments)
