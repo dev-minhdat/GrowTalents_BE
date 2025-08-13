@@ -1,18 +1,18 @@
-    package com.growtalents.model;
+package com.growtalents.model;
 
-    import com.growtalents.enums.RescheduleStatus;
-    import jakarta.persistence.*;
-    import lombok.*;
+import com.growtalents.enums.RescheduleStatus;
+import jakarta.persistence.*;
+import lombok.*;
 
-    import java.time.LocalDate;
-    import java.time.LocalDateTime;
-    import java.time.LocalTime;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
     @ToString
     @Entity
     @Table(name = "ClassSession")
