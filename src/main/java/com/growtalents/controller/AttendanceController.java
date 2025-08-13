@@ -1,5 +1,6 @@
 package com.growtalents.controller;
 
+import com.growtalents.service.Implement.AttendanceServiceImpl;
 import com.growtalents.service.Interfaces.AttendanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class AttendanceController {
-    private final AttendanceService attendanceService;
+    private final AttendanceServiceImpl attendanceService;
 
     /**
      * Level A: Get danh sách lớp theo ID giáo viên
@@ -40,16 +41,28 @@ public class AttendanceController {
     public ResponseEntity<String> createAttendance(
             @RequestBody Map<String, Object> request) {
         try {
+            System.out.println("=== CREATE ATTENDANCE REQUEST ===");
+            System.out.println("Request: " + request);
+
             String result = attendanceService.createAttendance(request);
+
+            System.out.println("=== CREATE ATTENDANCE SUCCESS ===");
+            System.out.println("Result: " + result);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (IllegalArgumentException e) {
+            System.out.println("=== ILLEGAL ARGUMENT ERROR ===");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
+            System.out.println("=== GENERAL ERROR ===");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Có lỗi xảy ra khi tạo điểm danh");
+                    .body("Có lỗi xảy ra khi tạo điểm danh: " + e.getMessage());
         }
     }
-
     /**
      * Level B: Update điểm danh
      * PUT /api/attendance/{attendanceId}

@@ -2,6 +2,7 @@ package com.growtalents.controller;
 
 import com.growtalents.dto.response.GlobalResponse;
 import com.growtalents.dto.response.Student.*;
+import com.growtalents.service.Implement.StudentServiceImpl;
 import com.growtalents.service.Interfaces.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,7 +21,7 @@ import java.util.List;
 @Tag(name = "Student APIs", description = "APIs dành cho học sinh")
 public class StudentController {
 
-    private final StudentService studentService;
+    private final StudentServiceImpl studentService;
 
     @Operation(
         summary = "Lấy danh sách buổi học trong tuần",

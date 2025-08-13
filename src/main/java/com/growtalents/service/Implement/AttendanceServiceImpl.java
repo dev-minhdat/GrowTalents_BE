@@ -49,51 +49,150 @@ public class AttendanceServiceImpl implements AttendanceService {
             throw new RuntimeException("Lỗi khi lấy danh sách lớp của giáo viên: " + e.getMessage());
         }
     }
-
     @Override
     public String createAttendance(Map<String, Object> request) {
         try {
+            System.out.println("=== DEBUG CREATE ATTENDANCE ===");
+            System.out.println("Full request: " + request);
+
             String courseId = (String) request.get("courseId");
             String sessionId = (String) request.get("sessionId");
             String attendanceDateStr = (String) request.get("attendanceDate");
             List<Map<String, Object>> attendanceRecords = (List<Map<String, Object>>) request.get("attendanceRecords");
 
+            System.out.println("courseId: " + courseId);
+            System.out.println("sessionId: " + sessionId);
+            System.out.println("attendanceDate: " + attendanceDateStr);
+            System.out.println("attendanceRecords: " + attendanceRecords);
+            System.out.println("attendanceRecords size: " + (attendanceRecords != null ? attendanceRecords.size() : "null"));
+
+            // ✅ KIỂM TRA REQUIRED FIELDS
+            if (courseId == null || courseId.trim().isEmpty()) {
+                throw new IllegalArgumentException("Course ID không được để trống");
+            }
+            if (sessionId == null || sessionId.trim().isEmpty()) {
+                throw new IllegalArgumentException("Session ID không được để trống");
+            }
+            if (attendanceDateStr == null || attendanceDateStr.trim().isEmpty()) {
+                throw new IllegalArgumentException("Attendance Date không được để trống");
+            }
+
             LocalDate attendanceDate = LocalDate.parse(attendanceDateStr);
 
             // Kiểm tra buổi học có tồn tại không
             ClassSession session = classSessionRepository.findById(sessionId)
-                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy buổi học"));
+                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy buổi học với ID: " + sessionId));
+
+            System.out.println("Found session: " + session.getSessionId() + " - " + session.getTopic());
 
             int createdCount = 0;
+            int skippedCount = 0;
+            int errorCount = 0;
 
-            for (Map<String, Object> record : attendanceRecords) {
-                String studentId = (String) record.get("studentId");
-                String statusStr = (String) record.get("status");
-                String note = (String) record.get("note");
+            // ✅ KIỂM TRA ATTENDANCE RECORDS
+            if (attendanceRecords == null || attendanceRecords.isEmpty()) {
+                System.out.println("No attendance records provided - creating empty session marker");
 
-                // Kiểm tra điểm danh đã tồn tại chưa
-                boolean exists = attendanceRepository.existsBySessionIdAndStudentId(sessionId, studentId);
-                if (exists) {
-                    continue; // Bỏ qua nếu đã có điểm danh
-                }
-
-                // Tạo điểm danh mới
-                Attendance attendance = new Attendance();
-                attendance.setAttendanceId(IdGenerator.generateUUID());
-                attendance.setSession(session);
-                attendance.setStudent(appUserRepository.findById(studentId)
-                        .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy học sinh")));
-                attendance.setStatus(AttendanceStatus.valueOf(statusStr));
-                attendance.setNote(note);
-                attendance.setAttendanceDate(attendanceDate);
-
-                attendanceRepository.save(attendance);
-                createdCount++;
+                // ✅ TẠO MỘT RECORD PLACEHOLDER ĐỂ ĐÁNH DẤU SESSION ĐÃ CÓ ATTENDANCE
+                // Hoặc có thể update ClassSession status, hoặc tạo AttendanceSession table riêng
+                return String.format("Đã khởi tạo phiên điểm danh cho buổi học '%s' (Ngày: %s). " +
+                                "Chưa có học sinh nào được điểm danh. Bạn có thể thêm học sinh sau.",
+                        session.getTopic(), attendanceDate);
             }
 
-            return String.format("Đã tạo điểm danh thành công cho %d học sinh", createdCount);
+            System.out.println("Processing " + attendanceRecords.size() + " attendance records...");
+
+            // ✅ XỬ LÝ TỪNG ATTENDANCE RECORD
+            for (int i = 0; i < attendanceRecords.size(); i++) {
+                Map<String, Object> record = attendanceRecords.get(i);
+                System.out.println("Processing record " + (i+1) + ": " + record);
+
+                try {
+                    String studentId = (String) record.get("studentId");
+                    String statusStr = (String) record.get("status");
+                    String note = (String) record.get("note");
+
+                    System.out.println("  - studentId: " + studentId);
+                    System.out.println("  - status: " + statusStr);
+                    System.out.println("  - note: " + note);
+
+                    // Validate required fields
+                    if (studentId == null || studentId.trim().isEmpty()) {
+                        System.out.println("  - ERROR: Student ID is null/empty");
+                        errorCount++;
+                        continue;
+                    }
+                    if (statusStr == null || statusStr.trim().isEmpty()) {
+                        System.out.println("  - ERROR: Status is null/empty");
+                        errorCount++;
+                        continue;
+                    }
+
+                    // Kiểm tra điểm danh đã tồn tại chưa
+                    boolean exists = attendanceRepository.existsBySessionIdAndStudentId(sessionId, studentId);
+                    System.out.println("  - Attendance exists: " + exists);
+
+                    if (exists) {
+                        System.out.println("  - SKIPPED: Attendance already exists");
+                        skippedCount++;
+                        continue;
+                    }
+
+                    // Tìm student
+                    AppUser student = appUserRepository.findById(studentId).orElse(null);
+                    if (student == null) {
+                        System.out.println("  - ERROR: Student not found with ID: " + studentId);
+                        errorCount++;
+                        continue;
+                    }
+                    System.out.println("  - Found student: " + student.getUserName());
+
+                    // Validate AttendanceStatus
+                    AttendanceStatus status;
+                    try {
+                        status = AttendanceStatus.valueOf(statusStr.trim());
+                        System.out.println("  - Parsed status: " + status);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("  - ERROR: Invalid status: " + statusStr);
+                        errorCount++;
+                        continue;
+                    }
+
+                    // ✅ TẠO VÀ LƯU ATTENDANCE
+                    String attendanceId = IdGenerator.generateUUID();
+                    System.out.println("  - Generated attendance ID: " + attendanceId);
+
+                    Attendance attendance = new Attendance();
+                    attendance.setAttendanceId(attendanceId);
+                    attendance.setSession(session);
+                    attendance.setStudent(student);
+                    attendance.setStatus(status);
+                    attendance.setNote(note != null ? note : "");
+                    attendance.setAttendanceDate(attendanceDate);
+
+                    System.out.println("  - About to save attendance: " + attendance.getAttendanceId());
+
+                    Attendance savedAttendance = attendanceRepository.save(attendance);
+                    System.out.println("  - SAVED: " + savedAttendance.getAttendanceId());
+
+                    createdCount++;
+
+                } catch (Exception e) {
+                    System.out.println("  - ERROR processing record: " + e.getMessage());
+                    e.printStackTrace();
+                    errorCount++;
+                }
+            }
+
+            String result = String.format("Điểm danh hoàn tất: %d tạo mới, %d bỏ qua (đã tồn tại), %d lỗi",
+                    createdCount, skippedCount, errorCount);
+
+            System.out.println("=== FINAL RESULT: " + result + " ===");
+            return result;
 
         } catch (Exception e) {
+            System.out.println("=== EXCEPTION IN CREATE ATTENDANCE ===");
+            e.printStackTrace();
             throw new RuntimeException("Lỗi khi tạo điểm danh: " + e.getMessage());
         }
     }

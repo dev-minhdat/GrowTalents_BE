@@ -48,7 +48,7 @@ public class StudentMapper {
                 .uploadFileUrl(assignment.getUploadFileUrl())
                 .courseId(assignment.getLesson().getChapter().getSyllabus().getCourse().getCourseId())
                 .courseName(assignment.getLesson().getChapter().getSyllabus().getCourse().getName())
-                .createdAt(null) // Will be updated when createdAt field is added
+                .createdAt(assignment.getCreatedAt() != null ? assignment.getCreatedAt().atStartOfDay() : null)
                 .hasSubmitted(submission != null)
                 .submittedAt(submission != null ? submission.getSubmittedAt() : null)
                 .submissionFileUrl(submission != null ? submission.getFileUrl() : null)
