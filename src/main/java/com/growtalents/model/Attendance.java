@@ -4,6 +4,8 @@ import com.growtalents.enums.AttendanceStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -25,7 +27,7 @@ public class Attendance {
     private String note;
     
     @Column (name = "attendance_date")
-    private String attendanceDate;
+    private LocalDate attendanceDate;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name = "session_id", nullable = false)

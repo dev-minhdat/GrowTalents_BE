@@ -10,6 +10,7 @@ import com.growtalents.model.ClassSession;
 import com.growtalents.enums.AttendanceStatus;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 public class AttendanceMapper {
     
     public Attendance toEntity(AttendanceCreateRequestDTO.AttendanceRecordRequestDTO dto, 
-                              String generateId, ClassSession session, AppUser student, String date) {
+                              String generateId, ClassSession session, AppUser student, LocalDate date) {
         return Attendance.builder()
                 .attendanceId(generateId)
                 .status(dto.getStatus())

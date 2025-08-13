@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -24,7 +25,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, String> 
     @Query("SELECT a FROM Attendance a " +
            "WHERE a.session.sessionId = :sessionId " +
            "AND a.attendanceDate = :date")
-    List<Attendance> findBySessionIdAndDate(@Param("sessionId") String sessionId, @Param("date") String date);
+    List<Attendance> findBySessionIdAndDate(@Param("sessionId") String sessionId, @Param("date") java.time.LocalDate date);
     
     @Query("SELECT a FROM Attendance a " +
            "WHERE a.student.userId = :studentId " +
@@ -49,5 +50,13 @@ public interface AttendanceRepository extends JpaRepository<Attendance, String> 
     @Query("SELECT a FROM Attendance a " +
            "WHERE a.session.course.courseId = :courseId " +
            "AND a.attendanceDate = :date")
-    List<Attendance> findByCourseIdAndDate(@Param("courseId") String courseId, @Param("date") String date);
+    List<Attendance> findByCourseIdAndDate(@Param("courseId") String courseId, @Param("date") java.time.LocalDate date);
+    
+    // Methods cần thiết cho AttendanceServiceImpl
+    @Query("SELECT a FROM Attendance a WHERE a.session.sessionId = :sessionId")
+    List<Attendance> findBySessionId(@Param("sessionId") String sessionId);
+    
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Attendance a " +
+           "WHERE a.session.sessionId = :sessionId AND a.student.userId = :studentId")
+    boolean existsBySessionIdAndStudentId(@Param("sessionId") String sessionId, @Param("studentId") String studentId);
 }
