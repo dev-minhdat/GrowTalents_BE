@@ -52,6 +52,15 @@ public interface AttendanceRepository extends JpaRepository<Attendance, String> 
            "AND a.attendanceDate = :date")
     List<Attendance> findByCourseIdAndDate(@Param("courseId") String courseId, @Param("date") java.time.LocalDate date);
     
+    // Method cho attendance history với date range
+    @Query("SELECT a FROM Attendance a " +
+           "WHERE a.session.course.courseId = :courseId " +
+           "AND a.attendanceDate BETWEEN :startDate AND :endDate " +
+           "ORDER BY a.attendanceDate DESC")
+    List<Attendance> findByCourseIdAndDateRange(@Param("courseId") String courseId, 
+                                               @Param("startDate") java.time.LocalDate startDate,
+                                               @Param("endDate") java.time.LocalDate endDate);
+    
     // Methods cần thiết cho AttendanceServiceImpl
     @Query("SELECT a FROM Attendance a WHERE a.session.sessionId = :sessionId")
     List<Attendance> findBySessionId(@Param("sessionId") String sessionId);
