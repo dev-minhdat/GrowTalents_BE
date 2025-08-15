@@ -8,6 +8,12 @@ import java.util.List;
 public interface StudentService {
     
     /**
+     * Lấy danh sách tất cả học sinh
+     * @return Danh sách học sinh
+     */
+    List<StudentListResponseDTO> getAllStudents();
+    
+    /**
      * Lấy danh sách buổi học trong tuần theo định dạng ngày đầu và cuối
      * @param studentId ID của học sinh
      * @param startDate Ngày bắt đầu (dd/MM/yyyy)
@@ -43,4 +49,24 @@ public interface StudentService {
      * @return Danh sách comment của giáo viên
      */
     List<StudentGradeCommentResponseDTO> getTeacherComments(String studentId);
+    
+    /**
+     * Lấy danh sách năm học
+     * @return Danh sách năm học
+     */
+    List<YearResponseDTO> getAllYears();
+    
+    /**
+     * Lấy danh sách kỳ học theo năm
+     * @param year Năm học
+     * @return Danh sách kỳ học
+     */
+    List<SemesterResponseDTO> getSemestersByYear(Integer year);
+    
+    /**
+     * Lấy danh sách lớp học theo kỳ
+     * @param semesterId ID kỳ học
+     * @return Danh sách lớp học
+     */
+    List<ClassResponseDTO> getClassesBySemester(String semesterId);
 }
