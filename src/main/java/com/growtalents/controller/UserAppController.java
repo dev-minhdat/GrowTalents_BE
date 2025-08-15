@@ -26,11 +26,13 @@ public class UserAppController {
 
     @Operation(
         summary = "Tạo tài khoản mới", 
-        description = "Tạo tài khoản người dùng mới. Chỉ Admin và Teacher có quyền tạo tài khoản."
+        description = "Tạo tài khoản người dùng mới với role được chỉ định. " +
+                     "ADMIN có thể tạo tất cả role. " +
+                     "TEACHER chỉ có thể tạo STUDENT và ASSISTANT."
     )
     @PostMapping
     public ResponseEntity<GlobalResponse<Void>> createUser(
-            @Parameter(description = "Thông tin người dùng mới", required = true)
+            @Parameter(description = "Thông tin người dùng mới bao gồm role", required = true)
             @Valid @RequestBody AppUserCreateRequestDTO dto) {
         appUserService.addAppUser(dto);
         return ResponseEntity.ok(GlobalResponse.success("Tạo tài khoản thành công", null));

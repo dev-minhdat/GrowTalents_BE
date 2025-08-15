@@ -18,7 +18,7 @@ public class AppUserMapper {
                 .userEmail(dto.getUserEmail())
                 .userPassword(dto.getUserPassword())
                 .userPhone(dto.getUserPhone())
-                .userRole(UserRole.STUDENT) // Default role là STUDENT
+                .userRole(dto.getUserRole() != null ? dto.getUserRole() : UserRole.STUDENT) // Sử dụng role từ request hoặc mặc định STUDENT
                 .userStatus(UserStatus.ACTIVE) // Default status là ACTIVE
                 .description(dto.getDescription())
                 .build();

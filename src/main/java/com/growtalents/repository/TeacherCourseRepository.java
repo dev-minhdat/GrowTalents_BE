@@ -27,5 +27,8 @@ public interface TeacherCourseRepository extends JpaRepository<TeacherCourse, In
     // Method cần thiết cho AttendanceServiceImpl
     @Query("SELECT tc FROM TeacherCourse tc WHERE tc.teacher.userId = :teacherId")
     List<TeacherCourse> findByTeacherUserId(@Param("teacherId") String teacherId);
+    
+    // Method để check teacher đã được assign vào course chưa
+    boolean existsByTeacherUserIdAndCourseCourseId(String teacherUserId, String courseCourseId);
 
 }
