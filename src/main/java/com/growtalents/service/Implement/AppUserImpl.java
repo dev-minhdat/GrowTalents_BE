@@ -52,7 +52,7 @@ public class AppUserImpl implements AppUserService {
     @Override
     public void addAppUser(AppUserCreateRequestDTO dto) {
         // Kiểm tra quyền của người tạo
-        validateCreatorPermission(dto.getCreatedById());
+        validateCreatorPermission(dto.getCreatedById(), dto.getUserRole());
         
         // Kiểm tra email đã tồn tại chưa
         if (appUserRepository.existsByUserEmail(dto.getUserEmail())) {
@@ -66,14 +66,41 @@ public class AppUserImpl implements AppUserService {
     }
     
     /**
-     * Kiểm tra quyền tạo user - chỉ ADMIN và TEACHER được phép tạo
+     * Kiểm tra quyền tạo user dựa trên role của người tạo và role của user được tạo
      */
-    private void validateCreatorPermission(String creatorId) {
+    private void validateCreatorPermission(String creatorId, UserRole targetRole) {
         AppUser creator = appUserRepository.findById(creatorId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người tạo với ID: " + creatorId));
         
-        if (creator.getUserRole() != UserRole.ADMIN && creator.getUserRole() != UserRole.TEACHER) {
+        UserRole creatorRole = creator.getUserRole();
+        
+        // Kiểm tra quyền cơ bản: chỉ ADMIN và TEACHER mới có quyền tạo user
+        if (creatorRole != UserRole.ADMIN && creatorRole != UserRole.TEACHER) {
             throw new RuntimeException("Chỉ Admin và Teacher mới có quyền tạo tài khoản mới");
+        }
+        
+        // Kiểm tra quyền tạo theo role cụ thể
+        if (targetRole != null) {
+            validateRoleCreationPermission(creatorRole, targetRole);
+        }
+    }
+    
+    /**
+     * Kiểm tra quyền tạo user theo role cụ thể
+     */
+    private void validateRoleCreationPermission(UserRole creatorRole, UserRole targetRole) {
+        switch (creatorRole) {
+            case ADMIN:
+                // ADMIN có thể tạo tất cả các role
+                break;
+            case TEACHER:
+                // TEACHER chỉ có thể tạo STUDENT và ASSISTANT
+                if (targetRole == UserRole.ADMIN || targetRole == UserRole.TEACHER || targetRole == UserRole.ACCOUNTANT) {
+                    throw new RuntimeException("Teacher chỉ có thể tạo tài khoản Student và Assistant");
+                }
+                break;
+            default:
+                throw new RuntimeException("Không có quyền tạo tài khoản với role: " + targetRole.getDisplayName());
         }
     }
 
