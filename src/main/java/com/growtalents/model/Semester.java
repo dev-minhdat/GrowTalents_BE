@@ -27,8 +27,13 @@ public class Semester {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private SemesterStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "academic_year_id", nullable = false)
+    private AcademicYear academicYear;
+
 
 }

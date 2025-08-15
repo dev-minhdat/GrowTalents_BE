@@ -35,10 +35,7 @@ public class Course {
     @Column (name = "type" )
     private CourseType type;
 
-//    @Lob
-//    @Column (name = "syllabus")
-//    private String syllabus;
-
+    @Enumerated(EnumType.STRING)
     @Column (name = "status")
     private CourseStatus status;
 }
