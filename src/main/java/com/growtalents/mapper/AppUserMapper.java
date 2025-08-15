@@ -3,6 +3,8 @@ package com.growtalents.mapper;
 import com.growtalents.dto.request.AppUser.AppUserCreateRequestDTO;
 import com.growtalents.dto.request.AppUser.AppUserUpdateRequestDTO;
 import com.growtalents.dto.response.AppUser.AppUserResponseDTO;
+import com.growtalents.enums.UserRole;
+import com.growtalents.enums.UserStatus;
 import com.growtalents.model.AppUser;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,8 @@ public class AppUserMapper {
                 .userEmail(dto.getUserEmail())
                 .userPassword(dto.getUserPassword())
                 .userPhone(dto.getUserPhone())
+                .userRole(UserRole.STUDENT) // Default role là STUDENT
+                .userStatus(UserStatus.ACTIVE) // Default status là ACTIVE
                 .description(dto.getDescription())
                 .build();
     }

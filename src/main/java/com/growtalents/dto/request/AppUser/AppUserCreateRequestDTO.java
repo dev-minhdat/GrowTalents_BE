@@ -32,4 +32,8 @@ public class AppUserCreateRequestDTO {
 
     private String description;
 
+    // ID của người tạo (để kiểm tra quyền)
+    @NotBlank(message = "ID người tạo không được để trống")
+    private String createdById;
+
 }
