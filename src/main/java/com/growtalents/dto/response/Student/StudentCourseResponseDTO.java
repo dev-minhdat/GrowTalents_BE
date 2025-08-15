@@ -19,7 +19,7 @@ public class StudentCourseResponseDTO {
     private CourseType courseType;
     private CourseStatus courseStatus;
     private Integer tuitionFee;
-    private String duration;
+    private Integer duration;
     private StudentCourseStatus enrollmentStatus;
     private LocalDate registrationDate;
     private LocalDate droppedOutDate;
