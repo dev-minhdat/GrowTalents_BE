@@ -14,15 +14,16 @@ import lombok.*;
 @Table (name = "TeacherCourse")
 public class TeacherCourse {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "teachercourse_id")
-    private int teacherCourseId;
+    private Integer teacherCourseId;
 
     @Enumerated(EnumType.STRING)
     @Column (name = "assigned_role")
     private AssignedRole assignedRole;
 
     @Column (name = "hourly_rate")
-    private int  hourlyRate;
+    private Integer  hourlyRate;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name =  "teacher_id", nullable = false)
