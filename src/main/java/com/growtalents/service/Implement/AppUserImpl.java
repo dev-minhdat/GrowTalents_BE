@@ -12,7 +12,6 @@ import com.growtalents.service.Interfaces.AppUserService;
 import com.growtalents.service.id.IdSequenceService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,10 +42,30 @@ public class AppUserImpl implements AppUserService {
 
     @Override
     public void addAppUser(AppUserCreateRequestDTO dto) {
+        // Kiểm tra quyền của người tạo
+        validateCreatorPermission(dto.getCreatedById());
+        
+        // Kiểm tra email đã tồn tại chưa
+        if (appUserRepository.existsByUserEmail(dto.getUserEmail())) {
+            throw new RuntimeException("Email đã tồn tại trong hệ thống");
+        }
+        
         int index = idSequenceService.getNextIndex("AppUser");
         String id = IdGenerator.generateUserId(index);
         AppUser appUser = AppUserMapper.toEntity(dto, id);
         appUserRepository.save(appUser);
+    }
+    
+    /**
+     * Kiểm tra quyền tạo user - chỉ ADMIN và TEACHER được phép tạo
+     */
+    private void validateCreatorPermission(String creatorId) {
+        AppUser creator = appUserRepository.findById(creatorId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người tạo với ID: " + creatorId));
+        
+        if (creator.getUserRole() != UserRole.ADMIN && creator.getUserRole() != UserRole.TEACHER) {
+            throw new RuntimeException("Chỉ Admin và Teacher mới có quyền tạo tài khoản mới");
+        }
     }
 
     @Override
