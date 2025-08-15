@@ -1,12 +1,15 @@
 package com.growtalents.controller;
 
+import com.growtalents.dto.request.AppUser.AppUserCreateRequestDTO;
 import com.growtalents.dto.response.GlobalResponse;
 import com.growtalents.dto.response.Student.*;
 import com.growtalents.service.Implement.StudentServiceImpl;
+import com.growtalents.service.Interfaces.AppUserService;
 import com.growtalents.service.Interfaces.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,69 @@ import java.util.List;
 public class StudentController {
 
     private final StudentServiceImpl studentService;
+    private final AppUserService appUserService;
+
+    @Operation(
+        summary = "Lấy danh sách tất cả học sinh",
+        description = "Lấy danh sách tất cả học sinh trong hệ thống"
+    )
+    @GetMapping
+    public ResponseEntity<GlobalResponse<List<StudentListResponseDTO>>> getAllStudents() {
+        List<StudentListResponseDTO> students = studentService.getAllStudents();
+        return ResponseEntity.ok(GlobalResponse.success("Lấy danh sách học sinh thành công", students));
+    }
+
+    @Operation(
+        summary = "Tạo học sinh mới",
+        description = "Tạo tài khoản học sinh mới trong hệ thống"
+    )
+    @PostMapping
+    public ResponseEntity<GlobalResponse<Void>> createStudent(
+            @Parameter(description = "Thông tin học sinh mới", required = true)
+            @Valid @RequestBody AppUserCreateRequestDTO dto) {
+        
+        // Đặt role mặc định là STUDENT
+        dto.setUserRole(com.growtalents.enums.UserRole.STUDENT);
+        appUserService.addAppUser(dto);
+        
+        return ResponseEntity.ok(GlobalResponse.success("Tạo học sinh thành công", null));
+    }
+
+    @Operation(
+        summary = "Lấy danh sách năm học",
+        description = "Lấy danh sách tất cả năm học có trong hệ thống"
+    )
+    @GetMapping("/years")
+    public ResponseEntity<GlobalResponse<List<YearResponseDTO>>> getAllYears() {
+        List<YearResponseDTO> years = studentService.getAllYears();
+        return ResponseEntity.ok(GlobalResponse.success("Lấy danh sách năm học thành công", years));
+    }
+
+    @Operation(
+        summary = "Lấy danh sách kỳ học theo năm",
+        description = "Lấy danh sách các kỳ học trong một năm học cụ thể"
+    )
+    @GetMapping("/years/{year}/semesters")
+    public ResponseEntity<GlobalResponse<List<SemesterResponseDTO>>> getSemestersByYear(
+            @Parameter(description = "Năm học", required = true, example = "2024")
+            @PathVariable Integer year) {
+        
+        List<SemesterResponseDTO> semesters = studentService.getSemestersByYear(year);
+        return ResponseEntity.ok(GlobalResponse.success("Lấy danh sách kỳ học thành công", semesters));
+    }
+
+    @Operation(
+        summary = "Lấy danh sách lớp theo kỳ học",
+        description = "Lấy danh sách các lớp học trong một kỳ học cụ thể"
+    )
+    @GetMapping("/semesters/{semesterId}/classes")
+    public ResponseEntity<GlobalResponse<List<ClassResponseDTO>>> getClassesBySemester(
+            @Parameter(description = "ID kỳ học", required = true, example = "SEM_001")
+            @PathVariable String semesterId) {
+        
+        List<ClassResponseDTO> classes = studentService.getClassesBySemester(semesterId);
+        return ResponseEntity.ok(GlobalResponse.success("Lấy danh sách lớp học thành công", classes));
+    }
 
     @Operation(
         summary = "Lấy danh sách buổi học trong tuần",

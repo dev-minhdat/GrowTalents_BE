@@ -2,7 +2,9 @@ package com.growtalents.service.Interfaces;
 
 import com.growtalents.dto.request.AppUser.AppUserCreateRequestDTO;
 import com.growtalents.dto.request.AppUser.AppUserUpdateRequestDTO;
+import com.growtalents.dto.request.AppUser.AuthenticationRequest;
 import com.growtalents.dto.response.AppUser.AppUserResponseDTO;
+import com.growtalents.dto.response.AppUser.AuthenticationResponse;
 import com.growtalents.enums.UserRole;
 import com.growtalents.model.AppUser;
 import org.springframework.stereotype.Service;
@@ -15,4 +17,5 @@ public interface AppUserService {
     public void addAppUser(AppUserCreateRequestDTO dto);
     public void updateAppUser(AppUserUpdateRequestDTO dto);
     public void deleteAppUser(String id);
+    AuthenticationResponse login(AuthenticationRequest request);
 }

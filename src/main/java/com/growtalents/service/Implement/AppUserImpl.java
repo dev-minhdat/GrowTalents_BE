@@ -2,18 +2,26 @@ package com.growtalents.service.Implement;
 
 import com.growtalents.dto.request.AppUser.AppUserCreateRequestDTO;
 import com.growtalents.dto.request.AppUser.AppUserUpdateRequestDTO;
+import com.growtalents.dto.request.AppUser.AuthenticationRequest;
 import com.growtalents.dto.response.AppUser.AppUserResponseDTO;
+import com.growtalents.dto.response.AppUser.AuthenticationResponse;
 import com.growtalents.enums.UserRole;
+import com.growtalents.exception.BadRequestException;
+import com.growtalents.exception.ResourceNotFoundException;
 import com.growtalents.helper.IdGenerator;
 import com.growtalents.mapper.AppUserMapper;
 import com.growtalents.model.AppUser;
 import com.growtalents.repository.AppUserRepository;
 import com.growtalents.service.Interfaces.AppUserService;
 import com.growtalents.service.id.IdSequenceService;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -22,6 +30,7 @@ import java.util.List;
 public class AppUserImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
     private final IdSequenceService idSequenceService;
+    protected String signedKey = "anhemgrowtalentsmaidinhmaidinhmaidinhluon";
 
 
     @Override
@@ -43,7 +52,7 @@ public class AppUserImpl implements AppUserService {
     @Override
     public void addAppUser(AppUserCreateRequestDTO dto) {
         // Kiểm tra quyền của người tạo
-        validateCreatorPermission(dto.getCreatedById());
+        validateCreatorPermission(dto.getCreatedById(), dto.getUserRole());
         
         // Kiểm tra email đã tồn tại chưa
         if (appUserRepository.existsByUserEmail(dto.getUserEmail())) {
@@ -57,14 +66,41 @@ public class AppUserImpl implements AppUserService {
     }
     
     /**
-     * Kiểm tra quyền tạo user - chỉ ADMIN và TEACHER được phép tạo
+     * Kiểm tra quyền tạo user dựa trên role của người tạo và role của user được tạo
      */
-    private void validateCreatorPermission(String creatorId) {
+    private void validateCreatorPermission(String creatorId, UserRole targetRole) {
         AppUser creator = appUserRepository.findById(creatorId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người tạo với ID: " + creatorId));
         
-        if (creator.getUserRole() != UserRole.ADMIN && creator.getUserRole() != UserRole.TEACHER) {
+        UserRole creatorRole = creator.getUserRole();
+        
+        // Kiểm tra quyền cơ bản: chỉ ADMIN và TEACHER mới có quyền tạo user
+        if (creatorRole != UserRole.ADMIN && creatorRole != UserRole.TEACHER) {
             throw new RuntimeException("Chỉ Admin và Teacher mới có quyền tạo tài khoản mới");
+        }
+        
+        // Kiểm tra quyền tạo theo role cụ thể
+        if (targetRole != null) {
+            validateRoleCreationPermission(creatorRole, targetRole);
+        }
+    }
+    
+    /**
+     * Kiểm tra quyền tạo user theo role cụ thể
+     */
+    private void validateRoleCreationPermission(UserRole creatorRole, UserRole targetRole) {
+        switch (creatorRole) {
+            case ADMIN:
+                // ADMIN có thể tạo tất cả các role
+                break;
+            case TEACHER:
+                // TEACHER chỉ có thể tạo STUDENT và ASSISTANT
+                if (targetRole == UserRole.ADMIN || targetRole == UserRole.TEACHER || targetRole == UserRole.ACCOUNTANT) {
+                    throw new RuntimeException("Teacher chỉ có thể tạo tài khoản Student và Assistant");
+                }
+                break;
+            default:
+                throw new RuntimeException("Không có quyền tạo tài khoản với role: " + targetRole.getDisplayName());
         }
     }
 
@@ -95,4 +131,36 @@ public class AppUserImpl implements AppUserService {
         appUserRepository.delete(user);
     }
 
+    @Override
+    public AuthenticationResponse login(AuthenticationRequest request) {
+        AppUser user = appUserRepository.findByUserEmailOrAccountName(request.getUsername(), request.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("Tên đăng nhập hoặc email không đúng"));
+        if(!user.getUserPassword().equals(request.getPassword())){
+            throw new BadRequestException("Mật khẩu không đúng");
+        }
+
+        String token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .build();
+    }
+
+    private String generateToken(AppUser user) {
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .subject(user.getUserId())
+                .claim("role", user.getUserRole().toString())
+                .build();
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(jwsHeader, payload);
+        try{
+            jwsObject.sign(new MACSigner(signedKey.getBytes(StandardCharsets.UTF_8)));
+            return jwsObject.serialize();
+        } catch (KeyLengthException e) {
+            throw new RuntimeException(e);
+        } catch (JOSEException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

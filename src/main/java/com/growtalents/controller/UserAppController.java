@@ -2,6 +2,7 @@ package com.growtalents.controller;
 
 import com.growtalents.dto.request.AppUser.AppUserCreateRequestDTO;
 import com.growtalents.dto.request.AppUser.AppUserUpdateRequestDTO;
+import com.growtalents.dto.request.AppUser.AuthenticationRequest;
 import com.growtalents.dto.response.AppUser.AppUserResponseDTO;
 import com.growtalents.dto.response.GlobalResponse;
 import com.growtalents.enums.UserRole;
@@ -26,11 +27,13 @@ public class UserAppController {
 
     @Operation(
         summary = "Tạo tài khoản mới", 
-        description = "Tạo tài khoản người dùng mới. Chỉ Admin và Teacher có quyền tạo tài khoản."
+        description = "Tạo tài khoản người dùng mới với role được chỉ định. " +
+                     "ADMIN có thể tạo tất cả role. " +
+                     "TEACHER chỉ có thể tạo STUDENT và ASSISTANT."
     )
     @PostMapping
     public ResponseEntity<GlobalResponse<Void>> createUser(
-            @Parameter(description = "Thông tin người dùng mới", required = true)
+            @Parameter(description = "Thông tin người dùng mới bao gồm role", required = true)
             @Valid @RequestBody AppUserCreateRequestDTO dto) {
         appUserService.addAppUser(dto);
         return ResponseEntity.ok(GlobalResponse.success("Tạo tài khoản thành công", null));
@@ -58,5 +61,10 @@ public class UserAppController {
     public ResponseEntity<GlobalResponse<Void>> deleteUser(@PathVariable String id) {
         appUserService.deleteAppUser(id);
         return ResponseEntity.ok(GlobalResponse.success("User deleted successfully", null));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request){
+        return ResponseEntity.ok(GlobalResponse.success("Đăng nhập thành công", appUserService.login(request)));
     }
 }
