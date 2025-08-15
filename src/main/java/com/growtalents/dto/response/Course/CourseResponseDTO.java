@@ -4,6 +4,8 @@ import com.growtalents.enums.CourseStatus;
 import com.growtalents.enums.CourseType;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -13,9 +15,12 @@ public class CourseResponseDTO {
     private String courseId;
     private String nameCourse;
     private Integer tuitionFee;
-    private String duration;
+    private Integer duration;
     private String description;
     private CourseType type;
-//    private String syllabus;
     private CourseStatus status;
+    private String imageUrl;
+    private String createdBy;
+    private LocalDate createdAt;
+    private LocalDate modifiedAt;
 }

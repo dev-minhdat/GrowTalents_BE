@@ -1,14 +1,20 @@
 package com.growtalents.dto.response.Semester;
 
-import lombok.Builder;
-import lombok.Data;
+import com.growtalents.enums.SemesterStatus;
+import lombok.*;
 
-@Data
+import java.time.LocalDate;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class SemesterResponseDTO {
     private String semesterId;
+    private Integer Year;
     private String name;
-    private String startDate;
-    private String endDate;
-    private String status;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private SemesterStatus status;
 }

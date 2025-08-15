@@ -10,11 +10,11 @@ import lombok.*;
 @Setter
 @Builder
 public class CourseCreateRequestDTO {
+    private String imageUrl;
     private String nameCourse;
+    private CourseType courseType;
     private Integer tuitionFee;
-    private String duration;
+    private Integer duration;
     private String description;
-    private CourseType type;
-//    private String syllabus;
-    private CourseStatus status;
+    private String createdByAdminId;
 }

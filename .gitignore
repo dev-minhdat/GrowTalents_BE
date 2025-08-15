@@ -41,9 +41,13 @@ out/
 
 # ================================
 # Maven
-.mvn/
-!**/src/main/**/mvnw*
-!**/src/main/**/mvnw.cmd
+# Maven Wrapper
+!mvnw
+!mvnw.cmd
+!/.mvn/wrapper/
+!/.mvn/wrapper/maven-wrapper.jar
+!/.mvn/wrapper/maven-wrapper.properties
+
 
 # ================================
 # Gradle
@@ -57,7 +61,7 @@ build/
 *.env
 application.yml
 application-*.yml
-application-*.properties
+# application-*.properties
 !application.properties   
 
 # ================================

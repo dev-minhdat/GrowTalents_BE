@@ -1,11 +1,19 @@
 package com.growtalents.dto.request.Semester;
 
-import lombok.Data;
+import com.growtalents.enums.SemesterStatus;
+import lombok.*;
 
-@Data
+import java.time.LocalDate;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
 public class SemesterCreateRequestDTO {
+    private Integer yearId;
     private String name;
-    private String startDate; // ISO format
-    private String endDate; // ISO format
-    private String status;
+    private LocalDate startDate;
+    private LocalDate endDate;
+//    private SemesterStatus status; khong truyen nhung o serviceimpl nho xu ly
 }
