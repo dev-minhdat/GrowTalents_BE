@@ -2,18 +2,26 @@ package com.growtalents.service.Implement;
 
 import com.growtalents.dto.request.AppUser.AppUserCreateRequestDTO;
 import com.growtalents.dto.request.AppUser.AppUserUpdateRequestDTO;
+import com.growtalents.dto.request.AppUser.AuthenticationRequest;
 import com.growtalents.dto.response.AppUser.AppUserResponseDTO;
+import com.growtalents.dto.response.AppUser.AuthenticationResponse;
 import com.growtalents.enums.UserRole;
+import com.growtalents.exception.BadRequestException;
+import com.growtalents.exception.ResourceNotFoundException;
 import com.growtalents.helper.IdGenerator;
 import com.growtalents.mapper.AppUserMapper;
 import com.growtalents.model.AppUser;
 import com.growtalents.repository.AppUserRepository;
 import com.growtalents.service.Interfaces.AppUserService;
 import com.growtalents.service.id.IdSequenceService;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -22,6 +30,7 @@ import java.util.List;
 public class AppUserImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
     private final IdSequenceService idSequenceService;
+    protected String signedKey = "anhemgrowtalentsmaidinhmaidinhmaidinhluon";
 
 
     @Override
@@ -95,4 +104,36 @@ public class AppUserImpl implements AppUserService {
         appUserRepository.delete(user);
     }
 
+    @Override
+    public AuthenticationResponse login(AuthenticationRequest request) {
+        AppUser user = appUserRepository.findByUserEmailOrAccountName(request.getUsername(), request.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("Tên đăng nhập hoặc email không đúng"));
+        if(!user.getUserPassword().equals(request.getPassword())){
+            throw new BadRequestException("Mật khẩu không đúng");
+        }
+
+        String token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .build();
+    }
+
+    private String generateToken(AppUser user) {
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .subject(user.getUserId())
+                .claim("role", user.getUserRole().toString())
+                .build();
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+        JWSObject jwsObject = new JWSObject(jwsHeader, payload);
+        try{
+            jwsObject.sign(new MACSigner(signedKey.getBytes(StandardCharsets.UTF_8)));
+            return jwsObject.serialize();
+        } catch (KeyLengthException e) {
+            throw new RuntimeException(e);
+        } catch (JOSEException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

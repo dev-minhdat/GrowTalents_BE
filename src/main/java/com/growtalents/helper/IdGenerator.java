@@ -15,6 +15,10 @@ public class IdGenerator {
         return prefix + "_" + numberFormat.format(index);
     }
 
+    public static String generateAdminId(int index){
+        return formatIndex("ADMIN", index);
+    }
+
     // === USER RELATED ===
     public static String generateUserId(int index) {
         return formatIndex("USR", index); // USR_001
