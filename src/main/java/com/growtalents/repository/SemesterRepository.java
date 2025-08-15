@@ -11,6 +11,10 @@ import java.util.List;
 @Repository
 public interface SemesterRepository extends JpaRepository<Semester, String> {
     
+    // Method from master branch
+    List<Semester> findByAcademicYear_Year(int year);
+    
+    // Methods from TuDat branch (for student controller functionality)
     @Query("SELECT DISTINCT YEAR(s.startDate) FROM Semester s ORDER BY YEAR(s.startDate) DESC")
     List<Integer> findDistinctYears();
     
