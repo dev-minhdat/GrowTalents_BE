@@ -63,4 +63,35 @@ public interface ClassSessionRepository extends JpaRepository<ClassSession, Stri
     order by cs.rescheduleSubmittedAt desc
     """)
     List<ClassSession> findReschedulesByTeacher(@Param("teacherId") String teacherId);
+    
+    /**
+     * Tìm tất cả buổi học của giáo viên
+     */
+    @Query("""
+    select cs
+    from ClassSession cs
+    join cs.course c
+    join TeacherCourse tc on tc.course = c
+    where tc.teacher.userId = :teacherId
+    order by cs.sessionDate asc, cs.startTime asc
+    """)
+    List<ClassSession> findByTeacherId(@Param("teacherId") String teacherId);
+    
+    /**
+     * Kiểm tra xung đột thời gian khi tạo buổi học mới
+     */
+    @Query("""
+    select count(cs) > 0
+    from ClassSession cs
+    join cs.course c
+    join TeacherCourse tc on tc.course = c
+    where tc.teacher.userId = :teacherId
+      and cs.sessionDate = :date
+      and cs.startTime < :proposedEnd
+      and cs.endTime   > :proposedStart
+    """)
+    boolean existsTimeConflictForNewSession(@Param("teacherId") String teacherId,
+                                          @Param("date") LocalDate date,
+                                          @Param("proposedStart") LocalTime proposedStart,
+                                          @Param("proposedEnd") LocalTime proposedEnd);
 }
