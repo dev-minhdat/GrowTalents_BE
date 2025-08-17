@@ -48,4 +48,20 @@ public class CourseController {
         CourseResponseDTO data = courseService.updateStatus(id, req.getStatus());
         return ResponseEntity.ok(GlobalResponse.success("Status updated", data));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<GlobalResponse<CourseResponseDTO>> updateCourse(
+            @PathVariable String id,
+            @RequestBody CourseCreateRequestDTO dto
+    ) {
+        CourseResponseDTO data = courseService.update(id, dto);
+        return ResponseEntity.ok(GlobalResponse.success("Updated Successfully", data));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<GlobalResponse<Void>> deleteCourse(@PathVariable String id) {
+        courseService.delete(id);
+        return ResponseEntity.ok(GlobalResponse.success("Deleted Successfully", null));
+    }
+
 }

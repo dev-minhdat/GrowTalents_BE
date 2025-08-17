@@ -12,7 +12,7 @@ public class ClassResponseDTO {
     private String courseName;
     private String courseType;
     private String courseStatus;
-    private String duration; // Changed from Integer to String
+    private Integer duration; // Changed from Integer to String
     private Integer tuitionFee; // Changed from Double to Integer
     private String description;
     private String teacherName;

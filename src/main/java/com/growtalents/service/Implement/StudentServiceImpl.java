@@ -214,7 +214,7 @@ public class StudentServiceImpl implements StudentService {
                             .courseName(course.getName())
                             .courseType(course.getType() != null ? course.getType().name() : null)
                             .courseStatus(course.getStatus() != null ? course.getStatus().name() : null)
-                            .duration(course.getDuration() != null ? course.getDuration().toString() : null)
+                            .duration(course.getDuration())
                             .tuitionFee(course.getTuitionFee())
                             .description(course.getDescription())
                             .teacherName(teacherName)

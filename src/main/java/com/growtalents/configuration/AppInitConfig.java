@@ -26,7 +26,7 @@ public class AppInitConfig {
                 String id = IdGenerator.generateAdminId(index);
                 appUser.setUserId(id);
                 appUser.setUserName("admin");
-                appUser.setUserEmail("admin@grwotalens.com");
+                appUser.setUserEmail("admin@growtalents.com");
                 appUser.setUserPassword("admin");
                 appUser.setUserRole(UserRole.ADMIN);
                 appUserRepository.save(appUser);
