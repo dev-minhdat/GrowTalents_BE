@@ -1,8 +1,10 @@
 package com.growtalents.controller;
 
 import com.growtalents.dto.request.Assignment.AssignmentCreateRequestDTO;
+import com.growtalents.dto.response.Assignment.AssignmentGradeTableDTO;
 import com.growtalents.dto.response.Assignment.AssignmentResponseDTO;
 import com.growtalents.dto.response.Assignment.AssignmentStudentStatusResponseDTO;
+import com.growtalents.dto.response.Assignment.AssignmentTableResponseDTO;
 import com.growtalents.dto.response.GlobalResponse;
 import com.growtalents.service.Interfaces.AssignmentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,4 +72,23 @@ public class AssignmentController {
         var data = assignmentService.getAllAssignmentByStudentIdAcrossCourses(studentId);
         return ResponseEntity.ok(GlobalResponse.success("Fetched assignments across courses", data));
     }
+    @GetMapping("/table/by-teacher-and-course")
+    @Operation(summary = "Lấy assignment dạng table theo TeacherId & CourseId")
+    public ResponseEntity<GlobalResponse<List<AssignmentTableResponseDTO>>> getAssignmentsTable(
+            @RequestParam String teacherId,
+            @RequestParam String courseId) {
+        var data = assignmentService.getTableDataByTeacherAndCourse(teacherId, courseId);
+        return ResponseEntity.ok(GlobalResponse.success(data));
+    }
+
+    @GetMapping("/grades/table")
+    @Operation(summary = "Lấy bảng điểm Assignment theo CourseId & AssignmentId")
+    public ResponseEntity<GlobalResponse<List<AssignmentGradeTableDTO>>> getGradeTable(
+            @RequestParam String courseId,
+            @RequestParam String assignmentId) {
+        var data = assignmentService.getGradeTableByCourseAndAssignment(courseId, assignmentId);
+        return ResponseEntity.ok(GlobalResponse.success(data));
+    }
+
+
 }

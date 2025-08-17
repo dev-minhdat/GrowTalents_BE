@@ -3,6 +3,7 @@ package com.growtalents.mapper;
 import com.growtalents.dto.request.Assignment.AssignmentCreateRequestDTO;
 import com.growtalents.dto.response.Assignment.AssignmentResponseDTO;
 import com.growtalents.dto.response.Assignment.AssignmentStudentStatusResponseDTO;
+import com.growtalents.dto.response.Assignment.AssignmentTableResponseDTO;
 import com.growtalents.model.Assignment;
 import com.growtalents.model.Course;
 import com.growtalents.model.Lesson;
@@ -47,6 +48,14 @@ public class AssignmentMapper {
                 .submitted(submitted)
                 .deadline(a.getDeadline())
                 .createdAt(a.getCreatedAt())
+                .build();
+    }
+    public AssignmentTableResponseDTO toTableDTO(Assignment entity, Long submittedCount) {
+        return AssignmentTableResponseDTO.builder()
+                .assignmentId(entity.getAssignmentId())
+                .title(entity.getTitle())
+                .deadline(entity.getDeadline())
+                .studentSubmittedCount(submittedCount)
                 .build();
     }
 }

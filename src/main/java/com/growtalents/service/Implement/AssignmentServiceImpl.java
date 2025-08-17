@@ -1,13 +1,16 @@
 package com.growtalents.service.Implement;
 
 import com.growtalents.dto.request.Assignment.AssignmentCreateRequestDTO;
+import com.growtalents.dto.response.Assignment.AssignmentGradeTableDTO;
 import com.growtalents.dto.response.Assignment.AssignmentResponseDTO;
 import com.growtalents.dto.response.Assignment.AssignmentStudentStatusResponseDTO;
+import com.growtalents.dto.response.Assignment.AssignmentTableResponseDTO;
 import com.growtalents.helper.IdGenerator;
 import com.growtalents.mapper.AssignmentMapper;
 import com.growtalents.model.Assignment;
 import com.growtalents.model.Lesson;
 import com.growtalents.repository.AssignmentRepository;
+import com.growtalents.repository.GradeRepository;
 import com.growtalents.repository.LessonRepository;
 import com.growtalents.repository.StudentSubmissionRepository;
 import com.growtalents.service.Interfaces.AssignmentService;
@@ -28,6 +31,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final AssignmentMapper assignmentMapper;
     private final LessonRepository lessonRepository;
     private final IdSequenceService idSequenceService;
+    private final GradeRepository gradeRepository;
     @Override
     public List<AssignmentResponseDTO> getAllAssignmentByLessonId(String lessonId) {
         List<Assignment> assignments = assignmentRepository.findByLesson_LessonId(lessonId);
@@ -84,4 +88,22 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .map(a -> AssignmentMapper.toStudentStatusDTO(a, submittedIds.contains(a.getAssignmentId())))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<AssignmentTableResponseDTO> getTableDataByTeacherAndCourse(String teacherId, String courseId) {
+        var assignments = assignmentRepository.findTableAssignmentsByTeacherAndCourse(teacherId, courseId);
+
+        return assignments.stream()
+                .map(a -> {
+                    Long count = gradeRepository.countByAssignment_AssignmentId(a.getAssignmentId());
+                    return assignmentMapper.toTableDTO(a, count);
+                })
+                .toList();
+    }
+    @Override
+    public List<AssignmentGradeTableDTO> getGradeTableByCourseAndAssignment(String courseId, String assignmentId) {
+        return assignmentRepository.getGradeTableByCourseAndAssignment(courseId, assignmentId);
+    }
+
+
 }

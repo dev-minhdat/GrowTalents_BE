@@ -1,8 +1,10 @@
 package com.growtalents.service.Interfaces;
 
 import com.growtalents.dto.request.Assignment.AssignmentCreateRequestDTO;
+import com.growtalents.dto.response.Assignment.AssignmentGradeTableDTO;
 import com.growtalents.dto.response.Assignment.AssignmentResponseDTO;
 import com.growtalents.dto.response.Assignment.AssignmentStudentStatusResponseDTO;
+import com.growtalents.dto.response.Assignment.AssignmentTableResponseDTO;
 
 import java.util.List;
 
@@ -15,5 +17,10 @@ public interface AssignmentService {
 
     // tất cả course đã đăng ký
     List<AssignmentStudentStatusResponseDTO> getAllAssignmentByStudentIdAcrossCourses(String studentId);
+
+    List<AssignmentTableResponseDTO> getTableDataByTeacherAndCourse(String teacherId, String courseId);
+
+    List<AssignmentGradeTableDTO> getGradeTableByCourseAndAssignment(String courseId, String assignmentId);
+
 
 }

@@ -47,4 +47,6 @@ public interface GradeRepository extends JpaRepository<Grade, String> {
             @Param("studentId") String studentId,
             @Param("assignmentId") String assignmentId
     );
+    Long countByAssignment_AssignmentId(String assignmentId);
+
 }
