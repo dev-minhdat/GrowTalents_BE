@@ -110,4 +110,14 @@ public class IdGenerator {
     public static String generateUserCourseId(String userId, String courseId) {
         return "UC_" + userId + "_" + courseId; // UC_USR_001_MATH_001
     }
+
+    // === TEACHER DETAIL ===
+    public static String generateTeacherId(int index) {
+        return formatIndex("TCH", index); // TCH_001
+    }
+
+    // === STUDENT DETAIL ===
+    public static String generateStudentId(int index) {
+        return formatIndex("STD", index); // STD_001
+    }
 }
