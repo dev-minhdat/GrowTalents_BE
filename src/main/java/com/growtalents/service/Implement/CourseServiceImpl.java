@@ -100,4 +100,31 @@ public class CourseServiceImpl implements CourseService {
         return courseMapper.toResponseDTO(c);
     }
 
+    @Override
+    @Transactional
+    public CourseResponseDTO update(String id, CourseCreateRequestDTO dto) {
+        Course entity = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + id));
+
+        entity.setName(dto.getNameCourse());
+        entity.setDescription(dto.getDescription());
+        entity.setType(dto.getCourseType());
+        entity.setDuration(dto.getDuration());
+        entity.setTuitionFee(dto.getTuitionFee());
+        entity.setImageUrl(dto.getImageUrl());
+        entity.setLastModified(LocalDate.now());
+
+        courseRepository.save(entity);
+        return courseMapper.toResponseDTO(entity);
+    }
+
+    @Override
+    @Transactional
+    public void delete(String id) {
+        Course entity = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + id));
+        courseRepository.delete(entity);
+    }
+
+
 }

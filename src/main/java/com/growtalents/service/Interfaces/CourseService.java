@@ -12,4 +12,7 @@ public interface CourseService {
     CourseResponseDTO getById(String courseId);
     List<CourseResponseDTO> list(String keyword, CourseStatus status, CourseType type);
     CourseResponseDTO updateStatus(String courseId, CourseStatus status);
+    CourseResponseDTO update(String id, CourseCreateRequestDTO dto);
+    void delete(String id);
+
 }
