@@ -1,6 +1,7 @@
 package com.growtalents.mapper;
 
 import com.growtalents.dto.request.Grade.GradeCreateRequestDTO;
+import com.growtalents.dto.response.Assignment.AssignmentTableResponseDTO;
 import com.growtalents.dto.response.Grade.GradeResponseDTO;
 import com.growtalents.model.*;
 
@@ -22,6 +23,15 @@ public class GradeMapper {
                 .score(grade.getScore())
                 .comment(grade.getComment())
                 .performanceLevel(grade.getPerformanceLevel())
+                .build();
+    }
+
+    public AssignmentTableResponseDTO toTableDTO(Assignment entity, Long submittedCount) {
+        return AssignmentTableResponseDTO.builder()
+                .assignmentId(entity.getAssignmentId())
+                .title(entity.getTitle())
+                .deadline(entity.getDeadline())
+                .studentSubmittedCount(submittedCount)
                 .build();
     }
 }
