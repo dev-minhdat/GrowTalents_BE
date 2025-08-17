@@ -81,6 +81,11 @@ public class IdGenerator {
         return formatIndex("LOG", index); // LOG_001
     }
 
+    // === CLASS SESSION ===
+    public static String generateClassSessionId(int index) {
+        return formatIndex("SES", index); // SES_001
+    }
+
     // === STUDENT COURSE RELATION ===
     public static String generateStudentCourseId(String studentId, String courseId) {
         return "SCU_" + studentId + "_" + courseId; // SCU_USR_001_MATH_001

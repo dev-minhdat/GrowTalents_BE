@@ -30,5 +30,17 @@ public interface TeacherCourseRepository extends JpaRepository<TeacherCourse, In
     
     // Method để check teacher đã được assign vào course chưa
     boolean existsByTeacherUserIdAndCourseCourseId(String teacherUserId, String courseCourseId);
+    
+    /**
+     * Kiểm tra giáo viên có quyền tạo buổi học cho khóa học này không
+     */
+    @Query("""
+    select count(tc) > 0
+    from TeacherCourse tc
+    where tc.teacher.userId = :teacherId
+      and tc.course.courseId = :courseId
+      and tc.course.status = com.growtalents.enums.CourseStatus.ACTIVE
+    """)
+    boolean existsActiveAssignment(@Param("teacherId") String teacherId, @Param("courseId") String courseId);
 
 }

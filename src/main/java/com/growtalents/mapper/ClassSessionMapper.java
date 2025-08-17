@@ -6,19 +6,23 @@ import com.growtalents.model.ClassSession;
 import com.growtalents.model.Course;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class ClassSessionMapper {
     public ClassSession toEntity(ClassSessionCreateRequestDTO dto, String generateId, Course course) {
+        // Tính endTime từ startTime + duration
+        LocalTime endTime = dto.getStartTime().plusMinutes(dto.getDurationInMinutes());
+        
         return ClassSession.builder()
                 .sessionId(generateId)
                 .topic(dto.getTopic())
                 .sessionDate(dto.getSessionDate())
                 .durationInMinutes(dto.getDurationInMinutes())
                 .startTime(dto.getStartTime())
-                .endTime(dto.getEndTime())
+                .endTime(endTime)
                 .course(course)
                 .build();
     }
