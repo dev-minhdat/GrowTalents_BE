@@ -19,6 +19,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -46,6 +47,12 @@ public class AppUserImpl implements AppUserService {
         return users.stream()
                 .map(AppUserMapper::toResponseDTO)
                 .toList();
+    }
+
+    @Override
+    public Page<AppUserResponseDTO> getAllAppUsersByRoleWithPagination(UserRole role, String keyword, org.springframework.data.domain.Pageable pageable) {
+        Page<AppUser> users = appUserRepository.findByUserRoleWithKeyword(role, keyword, pageable);
+        return users.map(AppUserMapper::toResponseDTO);
     }
 
 
