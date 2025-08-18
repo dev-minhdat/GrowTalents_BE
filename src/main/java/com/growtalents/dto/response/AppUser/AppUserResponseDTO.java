@@ -4,6 +4,8 @@ import com.growtalents.enums.UserRole;
 import com.growtalents.enums.UserStatus;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,4 +21,12 @@ public class AppUserResponseDTO {
     private String userParentName;
     private String userParentPhone;
     private String description;
+    
+    // Các fields mới cho teacher detail
+    private LocalDate birthDate;
+    private String gender;
+    private String specialization;
+    private String address;
+    private String educationLevel;
+    private String teachingExperience;
 }

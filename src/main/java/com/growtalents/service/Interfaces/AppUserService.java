@@ -7,6 +7,8 @@ import com.growtalents.dto.response.AppUser.AppUserResponseDTO;
 import com.growtalents.dto.response.AppUser.AuthenticationResponse;
 import com.growtalents.enums.UserRole;
 import com.growtalents.model.AppUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
 public interface AppUserService {
     public AppUserResponseDTO getAppUserById(String id);
     public List<AppUserResponseDTO> getAllAppUsersByRole(UserRole role);
+    public Page<AppUserResponseDTO> getAllAppUsersByRoleWithPagination(UserRole role, String keyword, Pageable pageable);
     public void addAppUser(AppUserCreateRequestDTO dto);
     public void updateAppUser(AppUserUpdateRequestDTO dto);
     public void deleteAppUser(String id);

@@ -12,6 +12,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +53,26 @@ public class UserAppController {
     public ResponseEntity<GlobalResponse<List<AppUserResponseDTO>>> getUsersByRole(@PathVariable UserRole role) {
         List<AppUserResponseDTO> list = appUserService.getAllAppUsersByRole(role);
         return ResponseEntity.ok(GlobalResponse.success(list));
+    }
+
+    @GetMapping("/role/{role}/paginated")
+    @Operation(
+        summary = "Lấy danh sách user theo role với phân trang",
+        description = "Lấy danh sách user theo role với hỗ trợ phân trang và tìm kiếm"
+    )
+    public ResponseEntity<GlobalResponse<Page<AppUserResponseDTO>>> getUsersByRoleWithPagination(
+            @PathVariable UserRole role,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "userName") String sort,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    ) {
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        
+        Page<AppUserResponseDTO> result = appUserService.getAllAppUsersByRoleWithPagination(role, keyword, pageable);
+        return ResponseEntity.ok(GlobalResponse.success("Lấy danh sách " + role.getDisplayName() + " thành công", result));
     }
 
     @PutMapping

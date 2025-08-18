@@ -5,6 +5,8 @@ import com.growtalents.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,6 +38,26 @@ public class AppUser {
 
     @Column(name = "phone")
     private String userPhone;
+
+    // Thêm các fields mới cho teacher/student detail
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "specialization") // Cho teacher - chuyên môn
+    private String specialization;
+
+    @Lob
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "education_level") // Cho teacher - trình độ học vấn
+    private String educationLevel;
+
+    @Column(name = "teaching_experience") // Cho teacher - kinh nghiệm giảng dạy
+    private String teachingExperience;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

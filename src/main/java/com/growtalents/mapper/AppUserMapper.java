@@ -47,6 +47,12 @@ public class AppUserMapper {
                 .userParentName(user.getUserParentName())
                 .userParentPhone(user.getUserParentPhone())
                 .description(user.getDescription())
+                .birthDate(user.getBirthDate())
+                .gender(user.getGender())
+                .specialization(user.getSpecialization())
+                .address(user.getAddress())
+                .educationLevel(user.getEducationLevel())
+                .teachingExperience(user.getTeachingExperience())
                 .build();
     }
 }
