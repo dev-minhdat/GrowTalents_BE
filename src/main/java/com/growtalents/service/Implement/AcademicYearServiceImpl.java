@@ -19,10 +19,10 @@ public class AcademicYearServiceImpl implements AcademicYearService {
     private final AcademicYearMapper academicYearMapper;
     @Override
     public void createAcademicYear(AcademicYearCreateRequestDTO dto) {
-        if (dto.getYear() == null) {
+        if (dto.getAcademicYear() == null) {
             throw new IllegalArgumentException("Năm học không được để trống");
         }
-        if (academicYearRepository.existsByYear(dto.getYear())) {
+        if (academicYearRepository.existsByYear(dto.getAcademicYear())) {
             throw new IllegalArgumentException("Năm học đã tồn tại");
         }
         AcademicYear year = academicYearMapper.toEntity(dto);
