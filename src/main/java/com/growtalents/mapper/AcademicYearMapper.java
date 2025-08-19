@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class AcademicYearMapper {
     public AcademicYear toEntity (AcademicYearCreateRequestDTO dto) {
         return AcademicYear.builder()
-                .year(dto.getYear())
+                .year(dto.getAcademicYear())
                 .build();
     }
     public AcademicYearResponseDTO toResponseDTO (AcademicYear entity) {

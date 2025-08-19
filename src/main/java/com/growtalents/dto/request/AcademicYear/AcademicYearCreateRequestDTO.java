@@ -12,5 +12,5 @@ import lombok.*;
 public class AcademicYearCreateRequestDTO {
     @NotNull(message = "Year is required")
     @Min(value = 2000, message = "Year must be greater than or equal to 2000")
-    private Integer year;
+    private Integer academicYear;
 }
